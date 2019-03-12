@@ -4,10 +4,49 @@
 
 		<title>Jogo da Velha</title>
 
+		<meta charset="utf-8">
+  		<meta name="viewport" content="width=device-width, initial-scale=1">
+  		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+  		<script>
+  			
+  			function changeText(state){
+  				if(state){
+  					$('#change-text').html("Oi, aqui está o texto 2.");
+  				}
+  				else{
+  					$('#change-text').html("Olá, eu sou o texto 1!");
+  				}
+  			}
+
+  			$(document).ready(function(){
+  				var tictac = true;
+  				$('#btn-change').click(function(){
+  						changeText(tictac);
+  						tictac = !tictac;
+  						console.log(tictac);
+  				});
+  			});
+
+  		</script>
+
+
 	</head>
 	<body>
 
-		<h1 class="teste">Jogo da Velha!</h1>
+		<div class="container">
+			<div class="jumbotron" style="background-color: lightgray;">
+				<h1 class="text-center">Jogo da Velha</h1>
+			</div>
+
+			<div>
+				<p id="change-text">Olá, eu sou o texto 1!</p>
+				<button id="btn-change" class="btn btn-success"> Clique para alternar texto acima</button>
+			</div>	
+		</div>
 
 	</body>
 </html>
