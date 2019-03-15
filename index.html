@@ -18,10 +18,13 @@
   			}
 
   			function fibonacci(numero){
-				if(numero == 2 || numero == 1){
-    				return 1;
+  				function fib_tail(n, a, b){
+  					if(n==1){
+  						return b
+  					}
+  					return fib_tail(n-1, a+b, a);
   				}					
-  			return fibonacci(numero - 1) + fibonacci(numero - 2)
+  			return fib_tail(numero, 1, 1);
 			}
 
 			function imc(peso, altura){
