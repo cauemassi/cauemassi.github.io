@@ -6,11 +6,14 @@ class GameController {
     this.frame = 0
   }
 
+  start(){
+    this.render()
+    this.snakeMove()
+  }
+
   render(){
     context.fillStyle = 'black'
     context.fillRect(0, 0, 20, 20)
-
-    this.moveSnake()
 
     context.fillStyle = 'white'
     for(let pieceId in this.snake.body){
@@ -23,11 +26,12 @@ class GameController {
     this.frame += 1
   }
 
-  moveSnake(){
+  snakeMove(){
     if(this.frame % this.snake.velocity == 0){
       this.snake.move()
     }
   }
+
 }
 
 class Food {

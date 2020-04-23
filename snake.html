@@ -31,8 +31,25 @@
 
     let gameController = new GameController(context)
 
+    document.addEventListener('keydown', controllSnake)
+
+    var acceptedSnakeControll = {
+      'w': 'up',
+      'a': 'left',
+      's': 'down',
+      'd': 'right',
+      'ArrowUp': 'up',
+      'ArrowLeft': 'left',
+      'ArrowDown': 'down',
+      'ArrowRight': 'right'
+    }
+
+    function controllSnake(event){
+      gameController.snake.updateDirection(acceptedSnakeControll[event.key])
+    }
+
     var main = function (){
-      gameController.render()
+      gameController.start()
 
       requestAnimationFrame(main)
     }
