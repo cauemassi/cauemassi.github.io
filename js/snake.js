@@ -4,11 +4,13 @@ class GameController {
     this.snake = new Snake()
     this.food = new Food()
     this.frame = 0
+    this.points = 0
   }
 
   start(){
     this.render()
     this.snakeMove()
+    this.controllSnakeCollision();
   }
 
   render(){
@@ -26,16 +28,24 @@ class GameController {
     this.frame += 1
   }
 
-  controllSnake(direction){
-    if(direction == undefined) return;
-    if(this.snake.updateDirection(direction)){
+  snakeMove(){
+    if(this.frame == this.snake.velocity){
       this.snake.move()
       this.frame = 0
     }
   }
 
-  snakeMove(){
-    if(this.frame == this.snake.velocity){
+  controllSnakeCollision(){
+    if(this.snake.detectCollisionWith(this.food)){
+      this.food.updatePosition()
+      this.snake.growUp()
+      this.frame = 0
+    }
+  }
+
+  controllSnake(direction){
+    if(direction == undefined) return;
+    if(this.snake.updateDirection(direction)){
       this.snake.move()
       this.frame = 0
     }
@@ -66,28 +76,39 @@ class Snake {
       new SnakePiece(11, 9, 'head')
     ]
     this.velocity = 15
+    this.head = this.setHead()
     this.color = 'white'
   }
 
-  move(){
-    let head = this.body[this.body.length - 1]
+  setHead(){
+    return this.body[this.body.length - 1]
+  }
 
+  move(){
+    this.growUp()
+    this.body.shift()
+  }
+
+  growUp(){
     switch(this.direction){
       case 'right':
-        this.body.push(new SnakePiece(head.positionX + 1, head.positionY))
+        this.body.push(new SnakePiece(this.head.positionX + 1, this.head.positionY))
         break
       case 'left':
-        this.body.push(new SnakePiece(head.positionX - 1, head.positionY))
+        this.body.push(new SnakePiece(this.head.positionX - 1, this.head.positionY))
         break
       case 'up':
-        this.body.push(new SnakePiece(head.positionX, head.positionY - 1))
+        this.body.push(new SnakePiece(this.head.positionX, this.head.positionY - 1))
         break
       case 'down':
-        this.body.push(new SnakePiece(head.positionX, head.positionY + 1))
+        this.body.push(new SnakePiece(this.head.positionX, this.head.positionY + 1))
         break
     }
+    this.head = this.setHead()
+  }
 
-    this.body.shift()
+  detectCollisionWith(object){
+    return object.positionY == this.head.positionY && object.positionX == this.head.positionX
   }
 
   updateDirection(newDirection){
