@@ -26,9 +26,18 @@ class GameController {
     this.frame += 1
   }
 
-  snakeMove(){
-    if(this.frame % this.snake.velocity == 0){
+  controllSnake(direction){
+    if(direction == undefined) return;
+    if(this.snake.updateDirection(direction)){
       this.snake.move()
+      this.frame = 0
+    }
+  }
+
+  snakeMove(){
+    if(this.frame == this.snake.velocity){
+      this.snake.move()
+      this.frame = 0
     }
   }
 
@@ -108,6 +117,7 @@ class Snake {
     if(change){
       this.direction = newDirection
     }
+    return change
   }
 }
 
