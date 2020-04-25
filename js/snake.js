@@ -3,6 +3,7 @@ class GameController {
     this.context = context
     this.snake = new Snake()
     this.food = new Food()
+    this.snakeEating = false
     this.frame = 0
     this.points = 0
   }
@@ -30,7 +31,13 @@ class GameController {
 
   snakeMove(){
     if(this.frame == this.snake.velocity){
-      this.snake.move()
+      if(this.snakeEating) {
+        this.snake.growUp()
+        this.snakeEating = false
+      }
+      else {
+        this.snake.move()
+      }
       this.frame = 0
     }
   }
@@ -38,8 +45,7 @@ class GameController {
   controllSnakeCollision(){
     if(this.snake.detectCollisionWith(this.food)){
       this.food.updatePosition()
-      this.snake.growUp()
-      this.frame = 0
+      this.snakeEating = true
     }
   }
 
@@ -52,20 +58,6 @@ class GameController {
   }
 
 }
-
-class Food {
-  constructor(){
-    this.positionX = Math.floor(Math.random() * 20)
-    this.positionY = Math.floor(Math.random() * 20)
-    this.color = 'white'
-  }
-
-  updatePosition(){
-    this.positionX = Math.floor(Math.random() * 20)
-    this.positionY = Math.floor(Math.random() * 20)
-  }
-}
-
 
 class Snake {
   constructor(){
@@ -92,16 +84,16 @@ class Snake {
   growUp(){
     switch(this.direction){
       case 'right':
-        this.body.push(new SnakePiece(this.head.positionX + 1, this.head.positionY))
+        this.body.push(new SnakePiece(this.head.positionX + 1, this.head.positionY, 'head'))
         break
       case 'left':
-        this.body.push(new SnakePiece(this.head.positionX - 1, this.head.positionY))
+        this.body.push(new SnakePiece(this.head.positionX - 1, this.head.positionY, 'head'))
         break
       case 'up':
-        this.body.push(new SnakePiece(this.head.positionX, this.head.positionY - 1))
+        this.body.push(new SnakePiece(this.head.positionX, this.head.positionY - 1, 'head'))
         break
       case 'down':
-        this.body.push(new SnakePiece(this.head.positionX, this.head.positionY + 1))
+        this.body.push(new SnakePiece(this.head.positionX, this.head.positionY + 1, 'head'))
         break
     }
     this.head = this.setHead()
@@ -142,13 +134,26 @@ class Snake {
   }
 }
 
+class Food {
+  constructor(){
+    this.positionX = Math.floor(Math.random() * 20)
+    this.positionY = Math.floor(Math.random() * 20)
+    this.color = 'white'
+  }
+
+  updatePosition(){
+    this.positionX = Math.floor(Math.random() * 20)
+    this.positionY = Math.floor(Math.random() * 20)
+  }
+}
+
 class SnakePiece{
-  constructor(positionX, positionY){
+  constructor(positionX, positionY, type){
     this.width = 1
     this.height = 1
     this.positionX = positionX
     this.positionY = positionY
-    this.type = 'head'
+    this.type = type
   }
 
   changeType(newType){
