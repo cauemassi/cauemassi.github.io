@@ -29,7 +29,7 @@
     let screen = document.getElementById('canvas')
     let context = screen.getContext('2d')
 
-    let gameController = new GameController(context)
+    let gameController = new GameController(context, screen)
 
     document.addEventListener('keydown', controllSnake)
 

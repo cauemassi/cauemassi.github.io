@@ -1,7 +1,7 @@
 class GameController {
-  constructor(context){
+  constructor(context, screen){
     this.context = context
-    this.snake = new Snake()
+    this.snake = new Snake(screen, true)
     this.food = new Food()
     this.snakeEating = false
     this.frame = 0
@@ -11,7 +11,7 @@ class GameController {
   start(){
     this.render()
     this.snakeMove()
-    this.controllSnakeCollision();
+    this.controllSnakeCollision()
   }
 
   render(){
@@ -31,13 +31,7 @@ class GameController {
 
   snakeMove(){
     if(this.frame == this.snake.velocity){
-      if(this.snakeEating) {
-        this.snake.growUp()
-        this.snakeEating = false
-      }
-      else {
-        this.snake.move()
-      }
+      this.snake.move()
       this.frame = 0
     }
   }
@@ -45,12 +39,16 @@ class GameController {
   controllSnakeCollision(){
     if(this.snake.detectCollisionWith(this.food)){
       this.food.updatePosition()
-      this.snakeEating = true
+      this.snake.eating = true
+    }
+
+    if(this.snake.crashWithBody()){
+      console.log('game over')
     }
   }
 
   controllSnake(direction){
-    if(direction == undefined) return;
+    if(direction == undefined) return
     if(this.snake.updateDirection(direction)){
       this.snake.move()
       this.frame = 0
@@ -60,43 +58,81 @@ class GameController {
 }
 
 class Snake {
-  constructor(){
+  constructor(screen, goesThroughWall){
     this.direction = 'right'
+    this.eating = false
     this.body = [
       new SnakePiece(9, 9, 'tail'),
       new SnakePiece(10, 9, 'body'),
       new SnakePiece(11, 9, 'head')
     ]
+    this.updateEntireBody()
     this.velocity = 15
-    this.head = this.setHead()
     this.color = 'white'
+    this.screen = screen
+    this.goesThroughWall = goesThroughWall
   }
 
-  setHead(){
-    return this.body[this.body.length - 1]
+  updateEntireBody(){
+    this.head = this.body[this.body.length - 1]
+    this.middleBody = this.body.slice(1, this.body.length - 1)
+    this.tail = this.body[0]
   }
 
   move(){
     this.growUp()
-    this.body.shift()
+    this.eating ? this.eating = false : this.body.shift()
+    this.updateEntireBody()
   }
 
   growUp(){
     switch(this.direction){
+
       case 'right':
-        this.body.push(new SnakePiece(this.head.positionX + 1, this.head.positionY, 'head'))
+        if(this.goesThroughWall && this.head.positionX + 1 >= this.screen.width) {
+          this.body.push(new SnakePiece(0, this.head.positionY))
+        }
+        else {
+          this.body.push(new SnakePiece(this.head.positionX + 1, this.head.positionY))
+        }
         break
+
       case 'left':
-        this.body.push(new SnakePiece(this.head.positionX - 1, this.head.positionY, 'head'))
+        if(this.goesThroughWall && this.head.positionX - 1 <= -1) {
+          this.body.push(new SnakePiece(this.screen.width - 1, this.head.positionY))
+        }
+        else {
+          this.body.push(new SnakePiece(this.head.positionX - 1, this.head.positionY))
+        }
         break
+
       case 'up':
-        this.body.push(new SnakePiece(this.head.positionX, this.head.positionY - 1, 'head'))
+        if(this.goesThroughWall && this.head.positionY - 1 <= -1) {
+          this.body.push(new SnakePiece(this.head.positionX, this.screen.height - 1))
+        }
+        else {
+          this.body.push(new SnakePiece(this.head.positionX, this.head.positionY - 1))
+        }
         break
+
       case 'down':
-        this.body.push(new SnakePiece(this.head.positionX, this.head.positionY + 1, 'head'))
+        if(this.goesThroughWall && this.head.positionY + 1 >= this.screen.height){
+          this.body.push(new SnakePiece(this.head.positionX, 0))
+        }
+        else{
+          this.body.push(new SnakePiece(this.head.positionX, this.head.positionY + 1))
+        }
         break
     }
-    this.head = this.setHead()
+  }
+
+  crashWithBody(){
+    if(this.detectCollisionWith(this.tail)) return true
+    for(let bodyPieceId in this.middleBody){
+      if(this.detectCollisionWith(this.middleBody[bodyPieceId])) return true
+    }
+
+    return false
   }
 
   detectCollisionWith(object){
