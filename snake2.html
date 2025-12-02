@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Jogo da Cobrinha</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top, #222 0, #050505 60%);
+      color: #f9f9f9;
+    }
+
+    .game-wrapper {
+      position: relative;
+      padding: 20px 24px 28px;
+      border-radius: 20px;
+      background: rgba(15, 15, 15, 0.9);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(10px);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 12px;
+      font-size: 26px;
+      letter-spacing: 1px;
+    }
+
+    canvas {
+      background: #111;
+      border-radius: 10px;
+      display: block;
+    }
+
+    #hud {
+      display: flex;
+      justify-content: space-between;
+      margin: 10px 2px 16px;
+      font-size: 14px;
+      opacity: 0.9;
+      gap: 16px;
+    }
+
+    #hud > div {
+      white-space: nowrap;
+    }
+
+    .badge {
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.8;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 10px 18px;
+      font-size: 14px;
+      cursor: pointer;
+      background: linear-gradient(135deg, #18a34a, #22c55e);
+      color: #fff;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 6px 16px rgba(21, 128, 61, 0.6);
+      transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+      box-shadow: 0 10px 24px rgba(21, 128, 61, 0.8);
+    }
+
+    .btn.secondary {
+      background: transparent;
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      box-shadow: none;
+    }
+
+    .btn.secondary:hover {
+      background: rgba(148, 163, 184, 0.12);
+      box-shadow: none;
+    }
+
+    /* Telas de overlay (menu inicial e game over) */
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), rgba(3, 7, 18, 0.96));
+      border-radius: 20px;
+      z-index: 10;
+    }
+
+    .panel {
+      text-align: center;
+      max-width: 280px;
+    }
+
+    .panel h2 {
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+
+    .panel p {
+      font-size: 13px;
+      line-height: 1.4;
+      margin-bottom: 12px;
+      opacity: 0.85;
+    }
+
+    .panel small {
+      display: block;
+      margin-top: 6px;
+      font-size: 11px;
+      opacity: 0.65;
+    }
+
+    .panel-buttons {
+      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
+    }
+
+    #menu-screen,
+    #game-over-screen {
+      display: none;
+    }
+
+    .visible {
+      display: flex !important;
+    }
+
+    .score-big {
+      font-size: 32px;
+      font-weight: 700;
+      margin: 4px 0;
+    }
+
+    .highlight {
+      font-weight: 600;
+    }
+
+    .controls {
+      margin-top: 8px;
+      font-size: 11px;
+      opacity: 0.7;
+    }
+
+    .difficulty-picker {
+      margin: 10px 0 4px;
+      font-size: 12px;
+      text-align: left;
+    }
+
+    .difficulty-picker span {
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.9;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .difficulty-options {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .difficulty-options label {
+      font-size: 12px;
+      opacity: 0.85;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .difficulty-options input {
+      accent-color: #22c55e;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-wrapper">
+    <h1>Snake</h1>
+
+    <!-- HUD com pontuação -->
+    <div id="hud">
+      <div>Pontos: <span id="score">0</span></div>
+      <div>Recorde: <span id="highScore">0</span></div>
+      <div>Dificuldade: <span id="difficulty-label">Fácil</span></div>
+    </div>
+
+    <!-- Canvas do jogo -->
+    <canvas id="game" width="400" height="400"></canvas>
+
+    <!-- Menu inicial -->
+    <div id="menu-screen" class="overlay visible">
+      <div class="panel">
+        <div class="badge">Jogo da Cobrinha</div>
+        <h2>Pronto para jogar?</h2>
+        <p>
+          Use as setas do teclado (ou W, A, S, D) para mover a cobra.<br />
+          Ela atravessa as paredes e aparece do outro lado – mas se bater em si mesma ou nas paredes (modo difícil), você perde.
+        </p>
+
+        <div class="difficulty-picker">
+          <span>Dificuldade</span>
+          <div class="difficulty-options">
+            <label>
+              <input type="radio" name="difficulty" value="easy" checked />
+              Fácil
+            </label>
+            <label>
+              <input type="radio" name="difficulty" value="medium" />
+              Médio
+            </label>
+            <label>
+              <input type="radio" name="difficulty" value="hard" />
+              Difícil
+            </label>
+          </div>
+        </div>
+
+        <p style="font-size: 12px; opacity: 0.85;">
+          Recorde atual: <span id="menu-high-score">0</span>
+        </p>
+        <div class="panel-buttons">
+          <button class="btn" id="btn-start">
+            ▶ Começar jogo
+          </button>
+          <small>O recorde é global neste navegador.</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tela de Game Over -->
+    <div id="game-over-screen" class="overlay">
+      <div class="panel">
+        <div class="badge">Fim de jogo</div>
+        <h2>Você perdeu!</h2>
+        <p>Sua pontuação:</p>
+        <div class="score-big" id="final-score">0</div>
+        <p>
+          Recorde: <span class="highlight" id="final-high-score">0</span>
+        </p>
+        <div class="panel-buttons">
+          <button class="btn" id="btn-restart">
+            🔁 Jogar de novo
+          </button>
+          <button class="btn secondary" id="btn-back-menu">
+            ⬅ Voltar ao menu
+          </button>
+        </div>
+        <div class="controls">
+          Controles: setas ou WASD • Não encoste em você mesmo nem nas paredes!
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- Canvas e contexto ---
+    const canvas = document.getElementById("game");
+    const ctx = canvas.getContext("2d");
+
+    // As variáveis abaixo são ajustadas pela dificuldade
+    let gridSize = 20;               // tamanho de cada quadradinho
+    let tileCount = canvas.width / gridSize;
+
+    // Velocidade (ms entre "ticks")
+    let baseSpeed = 120;
+    let minSpeed = 60;
+    let currentSpeed = baseSpeed;
+
+    // Estado do jogo
+    let snake;
+    let direction;
+    let nextDirection;
+    let food;
+    let score;
+    let highScore = 0;
+    let isRunning = false;
+    let difficulty = "easy";
+
+    // Paredes (usadas no modo difícil)
+    let walls = [];
+    let wallsEnabled = false;
+
+    // Elementos de UI
+    const scoreEl = document.getElementById("score");
+    const highScoreEl = document.getElementById("highScore");
+    const menuHighScoreEl = document.getElementById("menu-high-score");
+    const finalScoreEl = document.getElementById("final-score");
+    const finalHighScoreEl = document.getElementById("final-high-score");
+    const difficultyLabelEl = document.getElementById("difficulty-label");
+
+    const menuScreen = document.getElementById("menu-screen");
+    const gameOverScreen = document.getElementById("game-over-screen");
+
+    const btnStart = document.getElementById("btn-start");
+    const btnRestart = document.getElementById("btn-restart");
+    const btnBackMenu = document.getElementById("btn-back-menu");
+
+    // --- High score (recorde global) no localStorage ---
+    function loadHighScore() {
+      const saved = localStorage.getItem("snake_global_high_score");
+      highScore = saved ? parseInt(saved, 10) : 0;
+      updateHighScoreUI();
+    }
+
+    function saveHighScore() {
+      localStorage.setItem("snake_global_high_score", String(highScore));
+    }
+
+    function updateHighScoreUI() {
+      highScoreEl.textContent = highScore;
+      menuHighScoreEl.textContent = highScore;
+      finalHighScoreEl.textContent = highScore;
+    }
+
+    // --- Dificuldade ---
+    function getSelectedDifficulty() {
+      const checked = document.querySelector('input[name="difficulty"]:checked');
+      return checked ? checked.value : "easy";
+    }
+
+    function configureDifficulty(mode) {
+      difficulty = mode;
+
+      if (mode === "easy") {
+        gridSize = 20;        // 20x20
+        baseSpeed = 160;
+        minSpeed = 80;
+        wallsEnabled = false;
+        difficultyLabelEl.textContent = "Fácil";
+      } else if (mode === "medium") {
+        gridSize = 20;        // 20x20
+        baseSpeed = 120;
+        minSpeed = 60;
+        wallsEnabled = false;
+        difficultyLabelEl.textContent = "Médio";
+      } else {
+        gridSize = 16;        // 25x25 (mais quadrados)
+        baseSpeed = 100;
+        minSpeed = 40;
+        wallsEnabled = true;
+        difficultyLabelEl.textContent = "Difícil";
+      }
+
+      canvas.width = 400;
+      canvas.height = 400;
+      tileCount = canvas.width / gridSize;
+
+      walls = [];
+      currentSpeed = baseSpeed;
+    }
+
+    // --- Inicialização / reset do jogo ---
+    function resetGame() {
+      snake = [
+        { x: Math.floor(tileCount / 2), y: Math.floor(tileCount / 2) },
+        { x: Math.floor(tileCount / 2) - 1, y: Math.floor(tileCount / 2) },
+        { x: Math.floor(tileCount / 2) - 2, y: Math.floor(tileCount / 2) },
+      ];
+      direction = { x: 1, y: 0 }; // indo pra direita
+      nextDirection = { x: 1, y: 0 };
+      score = 0;
+      scoreEl.textContent = score;
+      walls = [];
+      spawnFood();
+    }
+
+    // Coloca a comida em um ponto aleatório livre (sem cobra nem parede)
+    function spawnFood() {
+      let newFood;
+      while (true) {
+        newFood = {
+          x: Math.floor(Math.random() * tileCount),
+          y: Math.floor(Math.random() * tileCount),
+        };
+        const isOnSnake = snake.some(
+          (segment) => segment.x === newFood.x && segment.y === newFood.y
+        );
+        const isOnWall = walls.some(
+          (wall) => wall.x === newFood.x && wall.y === newFood.y
+        );
+        if (!isOnSnake && !isOnWall) break;
+      }
+      food = newFood;
+    }
+
+    // Cria uma nova parede em posição aleatória (apenas modo difícil)
+    function spawnWall() {
+      if (!wallsEnabled) return;
+
+      let newWall;
+      let safety = 0;
+      while (true) {
+        newWall = {
+          x: Math.floor(Math.random() * tileCount),
+          y: Math.floor(Math.random() * tileCount),
+        };
+        const isOnSnake = snake.some(
+          (segment) => segment.x === newWall.x && segment.y === newWall.y
+        );
+        const isOnFood = food && food.x === newWall.x && food.y === newWall.y;
+        const isOnWall = walls.some(
+          (wall) => wall.x === newWall.x && wall.y === newWall.y
+        );
+        if (!isOnSnake && !isOnFood && !isOnWall) break;
+        safety++;
+        if (safety > 200) break; // só pra garantir que não trava se o mapa estiver muito cheio
+      }
+      walls.push(newWall);
+    }
+
+    // --- Loop do jogo usando setTimeout (para ajustar velocidade dinamicamente) ---
+    function startGame() {
+      configureDifficulty(getSelectedDifficulty());
+      resetGame();
+      hideOverlays();
+      isRunning = true;
+      gameLoop();
+    }
+
+    function stopGame() {
+      isRunning = false;
+    }
+
+    function updateSpeedByScore() {
+      // Exemplo: a cada ponto, diminui 5ms até o mínimo
+      const speedBoost = score * 5;
+      currentSpeed = Math.max(baseSpeed - speedBoost, minSpeed);
+    }
+
+    function gameLoop() {
+      if (!isRunning) return;
+
+      update();
+      draw();
+
+      // agenda o próximo "tick" com a velocidade atual
+      setTimeout(gameLoop, currentSpeed);
+    }
+
+    function update() {
+      // Atualiza direção (evita reversão instantânea)
+      direction = { ...nextDirection };
+
+      // Novo head da cobra
+      let head = { ...snake[0] };
+      head.x += direction.x;
+      head.y += direction.y;
+
+      // Atravessa as paredes e surge do lado oposto
+      if (head.x < 0) head.x = tileCount - 1;
+      else if (head.x >= tileCount) head.x = 0;
+
+      if (head.y < 0) head.y = tileCount - 1;
+      else if (head.y >= tileCount) head.y = 0;
+
+      // Verifica colisão com o próprio corpo
+      const hitSelf = snake.some(
+        (segment) => segment.x === head.x && segment.y === head.y
+      );
+
+      // Verifica colisão com paredes (se houver)
+      const hitWall = walls.some(
+        (wall) => wall.x === head.x && wall.y === head.y
+      );
+
+      if (hitSelf || hitWall) {
+        return gameOver();
+      }
+
+      // Coloca a nova cabeça no início
+      snake.unshift(head);
+
+      // Comeu a comida?
+      if (head.x === food.x && head.y === food.y) {
+        score++;
+        scoreEl.textContent = score;
+
+        // Atualiza recorde global
+        if (score > highScore) {
+          highScore = score;
+          saveHighScore();
+          updateHighScoreUI();
+        }
+
+        // Ajusta velocidade
+        updateSpeedByScore();
+
+        // Respawna a comida
+        spawnFood();
+
+        // Cria uma nova parede no modo difícil
+        spawnWall();
+      } else {
+        // Não comeu: remove o último segmento (não cresce)
+        snake.pop();
+      }
+    }
+
+    function draw() {
+      // Fundo
+      ctx.fillStyle = "#020617";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Paredes (modo difícil)
+      if (wallsEnabled) {
+        walls.forEach((wall) => {
+          const x = wall.x * gridSize;
+          const y = wall.y * gridSize;
+          ctx.fillStyle = "#6b7280";
+          ctx.fillRect(x + 1, y + 1, gridSize - 2, gridSize - 2);
+        });
+      }
+
+      // Food (ponto)
+      ctx.fillStyle = "#f97316";
+      ctx.beginPath();
+      ctx.arc(
+        food.x * gridSize + gridSize / 2,
+        food.y * gridSize + gridSize / 2,
+        gridSize / 3,
+        0,
+        Math.PI * 2
+      );
+      ctx.fill();
+
+      // Cobra
+      snake.forEach((segment, index) => {
+        if (index === 0) {
+          // cabeça
+          ctx.fillStyle = "#22c55e";
+        } else {
+          ctx.fillStyle = "#16a34a";
+        }
+        const x = segment.x * gridSize;
+        const y = segment.y * gridSize;
+        ctx.fillRect(x + 2, y + 2, gridSize - 4, gridSize - 4);
+      });
+    }
+
+    // --- Fim de jogo ---
+    function gameOver() {
+      stopGame();
+      finalScoreEl.textContent = score;
+      updateHighScoreUI();
+      showGameOver();
+    }
+
+    // --- Controles de teclado ---
+    function handleKeyDown(e) {
+      if (!isRunning) return;
+
+      const key = e.key;
+      let newDir = { ...direction };
+
+      if (key === "ArrowUp" || key === "w" || key === "W") {
+        if (direction.y !== 1) newDir = { x: 0, y: -1 };
+      } else if (key === "ArrowDown" || key === "s" || key === "S") {
+        if (direction.y !== -1) newDir = { x: 0, y: 1 };
+      } else if (key === "ArrowLeft" || key === "a" || key === "A") {
+        if (direction.x !== 1) newDir = { x: -1, y: 0 };
+      } else if (key === "ArrowRight" || key === "d" || key === "D") {
+        if (direction.x !== -1) newDir = { x: 1, y: 0 };
+      }
+
+      nextDirection = newDir;
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    // --- UI: mostrar/ocultar telas ---
+    function hideOverlays() {
+      menuScreen.classList.remove("visible");
+      gameOverScreen.classList.remove("visible");
+    }
+
+    function showMenu() {
+      stopGame();
+      hideOverlays();
+      menuScreen.classList.add("visible");
+    }
+
+    function showGameOver() {
+      hideOverlays();
+      gameOverScreen.classList.add("visible");
+    }
+
+    // Botões
+    btnStart.addEventListener("click", () => {
+      startGame();
+    });
+
+    btnRestart.addEventListener("click", () => {
+      startGame();
+    });
+
+    btnBackMenu.addEventListener("click", () => {
+      showMenu();
+    });
+
+    // --- Inicialização ---
+    loadHighScore();
+    configureDifficulty("easy");
+    resetGame();
+    draw(); // desenha a tela inicial por baixo do menu
+    showMenu();
+  </script>
+</body>
+</html>
