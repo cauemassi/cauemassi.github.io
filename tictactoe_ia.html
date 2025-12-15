@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Velha - Estilo Pixel</title>
+    <link rel="stylesheet" href="css/tictactoe_ia.css">
+</head>
+<body>
+
+    <div class="container">
+        <!-- Tela Inicial -->
+        <div id="start-screen">
+            <h1>TICTACTOE</h1>
+            <div class="logo">#</div>
+            <button id="start-game-btn">Iniciar</button>
+        </div>
+
+        <!-- Tela de Setup dos Jogadores -->
+        <div id="player-setup-screen" class="hidden">
+            <h1>QUEM VAI JOGAR?</h1>
+            <input type="text" id="player1-name" placeholder="NOME JOGADOR 1">
+            <input type="text" id="player2-name" placeholder="NOME JOGADOR 2">
+            <div class="symbol-selection">
+                <p>JOGADOR 1, ESCOLHA SEU SÍMBOLO:</p>
+                <button id="choose-x">X</button>
+                <button id="choose-o">O</button>
+            </div>
+            <button id="confirm-players-btn" class="hidden" style="margin-top: 20px;">Começar Jogo</button>
+        </div>
+
+        <!-- Tela do Jogo -->
+        <div id="game-screen" class="hidden">
+            <div id="status" class="status"></div>
+            <div id="scoreboard" class="scoreboard"></div>
+            <div id="game-board" class="game-board">
+                <div class="cell" data-index="0"></div>
+                <div class="cell" data-index="1"></div>
+                <div class="cell" data-index="2"></div>
+                <div class="cell" data-index="3"></div>
+                <div class="cell" data-index="4"></div>
+                <div class="cell" data-index="5"></div>
+                <div class="cell" data-index="6"></div>
+                <div class="cell" data-index="7"></div>
+                <div class="cell" data-index="8"></div>
+            </div>
+            <div class="controls">
+                <button id="restart-btn">Reiniciar Partida</button>
+                <button id="menu-btn">Voltar ao Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/tictactoe_ia.js"></script>
+</body>
+</html>

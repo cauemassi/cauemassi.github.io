@@ -1,121 +1,224 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<title>Site Aprendizado</title>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cauê Massi Corrêa - Engenheiro de Software Fullstack</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            color: #343a40;
+        }
+        .navbar {
+            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+        }
+        .hero {
+            background-color: #e9ecef;
+            padding: 4rem 2rem;
+        }
+        .hero img {
+            width: 150px;
+            height: 150px;
+            border: 5px solid #fff;
+            box-shadow: 0 0 15px rgba(0,0,0,.1);
+        }
+        .section-title {
+            border-bottom: 3px solid #0d6efd;
+            padding-bottom: 10px;
+            display: inline-block;
+            margin-bottom: 2rem;
+        }
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+        .experience-item {
+            border-left: 3px solid #dee2e6;
+            padding-left: 20px;
+            margin-bottom: 30px;
+        }
+        .skills-list i {
+            font-size: 2.5rem;
+            margin-right: 15px;
+        }
+        .footer {
+            background-color: #343a40;
+            color: white;
+            padding: 2rem 0;
+        }
+        .footer a {
+            color: #ffc107;
+        }
+        .card-link {
+            text-decoration: none;
+            color: inherit;
+        }
+    </style>
+</head>
+<body>
 
-		<meta charset="utf-8">
-  		<meta name="viewport" content="width=device-width, initial-scale=1">
-  		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-  		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-  		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">Cauê Massi Corrêa</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#sobre">Sobre</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#educacao">Educação</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#experiencia">Experiência</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#projetos">Projetos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contato">Contato</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
+    <header class="hero text-center">
+        <div class="container">
+            <img src="images/avatar.png" class="rounded-circle mb-3" alt="Avatar de Caue Massi">
+            <h1 class="display-4">Cauê Massi Corrêa</h1>
+            <p class="lead">Engenheiro de Software Fullstack</p>
+            <a href="cv.pdf" class="btn btn-primary" download="cv_caue_massi.pdf">
+                <i class="fas fa-download"></i> Baixar meu CV
+            </a>
+        </div>
+    </header>
 
-  		<script>
-  			
-  			function foo(texto){
-  				document.getElementById("aaa").innerHTML = texto;			
-  			}
+    <main class="container my-5">
+        <section id="sobre" class="mb-5">
+            <h2 class="text-center mb-4 section-title">Sobre Mim</h2>
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center">
+                    <p>Iniciei minha carreira como desenvolvedor de testes (QA), migrei para a área de suporte e, posteriormente, para o desenvolvimento de software. Com experiência em todo o fluxo de desenvolvimento de produto, atuo tanto no backend (Ruby on Rails) quanto no frontend (React, Vue.js). Também atuo como Scrum Master, facilitando a adoção de práticas ágeis para garantir a eficiência do time. Busco oportunidades desafiadoras para contribuir com projetos inovadores e promover crescimento mútuo.</p>
+                </div>
+            </div>
+        </section>
 
-  			function fibonacci(numero){
-  				function fib_tail(n, a, b){
-  					if(n==1){
-  						return b
-  					}
-  					return fib_tail(n-1, a+b, a);
-  				}					
-  			return fib_tail(numero, 1, 1);
-			}
+        <section id="educacao" class="mb-5">
+            <h2 class="text-center mb-4 section-title">Educação</h2>
+            <div class="row">
+                <div class="col-md-10 mx-auto">
+                    <div class="experience-item">
+                        <h5>Universidade Federal do ABC</h5>
+                        <p class="text-muted">Mestrado em Ciência da Computação (2025 - Atual)</p>
+                    </div>
+                    <div class="experience-item">
+                        <h5>Universidade Federal do ABC</h5>
+                        <p class="text-muted">Bacharelado em Ciência da Computação (2013-2019)</p>
+                    </div>
+                    <div class="experience-item">
+                        <h5>Universidade Federal do ABC</h5>
+                        <p class="text-muted">Bacharelado em Ciência e Tecnologia (2013-2017)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-			function imc(peso, altura){
-				p = parseFloat(peso);
-				a = parseFloat(altura);
-				return peso / (altura*altura);
-			}
+        <section id="experiencia" class="mb-5">
+            <h2 class="text-center mb-4 section-title">Experiência Profissional</h2>
+            <div class="row">
+                <div class="col-md-10 mx-auto">
+                    <div class="experience-item">
+                        <h5>Engenheiro de Software na Kria</h5>
+                        <p class="text-muted">Junho/2023 - Atual</p>
+                        <ul>
+                            <li>Desenvolvimento fullstack em Ruby on Rails, aplicando Clean Architecture.</li>
+                            <li>Implementação de TDD com RSpec para assegurar qualidade.</li>
+                            <li>Uso da gem Sidekiq para processamento assíncrono.</li>
+                            <li>Gerenciamento de infraestrutura na Heroku e CI/CD com GitHub.</li>
+                        </ul>
+                    </div>
+                    <div class="experience-item">
+                        <h5>Engenheiro de Software na Basement</h5>
+                        <p class="text-muted">Março/2019 - Junho/2023</p>
+                        <ul>
+                            <li>Desenvolvimento de soluções backend e fullstack com Ruby on Rails e TDD.</li>
+                            <li>Experiência em arquitetura de microsserviços com RabbitMQ.</li>
+                            <li>Desenvolvimento de interfaces com React e Vue.js.</li>
+                        </ul>
+                    </div>
+                    <div class="experience-item">
+                        <h5>Analista de Sistemas na Open Labs S.A.</h5>
+                        <p class="text-muted">Janeiro/2017 - Outubro/2018</p>
+                        <ul>
+                            <li>Suporte e implementação de sistemas com Java, Linux e Oracle.</li>
+                            <li>Atuação em garantia de qualidade (QA).</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-			function chama_fib(){
-				//var valor = document.getElementById('numero-fib').value;
-				var valor = $('#numero-fib').val();
+        <section id="projetos" class="mb-5">
+            <h2 class="text-center mb-4 section-title">Meus Projetos</h2>
+            <div class="row">
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <a href="tictactoe.html" class="card-link">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Jogo da Velha</h5>
+                                <p class="card-text">O clássico jogo da velha, implementado com lógica em JavaScript. Este projeto foi feito à mão.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <a href="tictactoe_ia.html" class="card-link">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Jogo da Velha (IA)</h5>
+                                <p class="card-text">Uma versão do clássico jogo da velha com estilo retro pixel art e placar. Este é um projeto utilizando IA para a sua criação.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <a href="snake.html" class="card-link">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Snake</h5>
+                                <p class="card-text">Uma versão do popular jogo Snake para testar seus reflexos. Este projeto foi feito a mão.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <a href="snake2.html" class="card-link">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Snake (IA)</h5>
+                                <p class="card-text">Uma nova versão do jogo da cobrinha. Este é um projeto utilizando IA para a sua criação.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
 
-				//document.getElementById('result-fib').innerHTML = fibonacci(parseInt(valor));
-				$('#result-fib').html(fibonacci(parseInt(valor)));
-			}
+        <section id="contato" class="text-center">
+            <h2 class="mb-4 section-title">Entre em Contato</h2>
+            <p>Estou disponível para novas oportunidades e colaborações. Você pode me encontrar aqui:</p>
+            <div>
+                <a href="mailto:cauemassi@gmail.com" class="btn btn-outline-primary mx-2"><i class="fas fa-envelope"></i> E-mail</a>
+                <a href="https://github.com/cauemassi" class="btn btn-outline-dark mx-2" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+                <a href="https://www.linkedin.com/in/cauemassi/" class="btn btn-outline-primary mx-2" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
+            </div>
+        </section>
+    </main>
 
-			function print_alo(){
-				console.log("ALOALO");
-			}
+    <footer class="footer text-center">
+        <p>&copy; 2025 Cauê Massi Corrêa. Todos os direitos reservados.</p>
+    </footer>
 
-			$(document).ready(function(){
-				$("#btn-fib").click(function(){
-					chama_fib();
-				});
-
-				$("#btn-imc").click(function(){
-					$('#result-imc').html(imc($('#peso').val(), $('#altura').val()));
-				})
-
-								
-			});
-
-  		</script>
-
-	</head>
-	<body>
-
-		<div class="container">
-			<div class="jumbotron" style="background-color: lightgray;">
-				<h1 class="text-center">Site pessoal de aprendizado</h1>
-			</div>	
-
-			
-
-			<p >Esse site tem a função de aplicar os conhecimentos em HTML, CSS, Bootstrap, Javascript, desenvolvimento web em geral.</p>
-
-			<div class="form-group">
-  				<label>Digite um número para saber seu valor Fibonacci:</label>
-  				<input type="text" class="form-control" id="numero-fib">
-			</div>
-
-			<div>
-				<button type="button" id="btn-fib" class="btn btn-primary">Calcular</button>
-			</div></br>
-			
-
-			<div>
-				<p id="result-fib" class = "alert alert-success">0</p>
-			</div>
-
-			<p>Vamos verificar seu IMC</p>
-
-			<div class="form-group">				
-  				<label>Digite seu peso(em kg):</label>
-  				<input type="text" class="form-control" id="peso">
-
-			</div>
-
-			<div class="form-group">
- 				<label>Digite sua altura(em metros):</label>
-  				<input type="text" class="form-control" id="altura">
-			</div>
-
-			<div>
-				<button type="button" id="btn-imc" class="btn btn-primary">Calcular</button>
-			</div></br>
-
-			<div>
-				<p id="result-imc" class = "alert alert-success">0</p>
-			</div>
-
-			<!--<button onclick="foo('aaa', 'BBB')">TESTE</button>-->
-
-			<p>Acesso à um exemplo de <a href=landing.html> landing page!</a></p>
-
-			<p>Vamos jogar tic tac toe, o famoso <a href=tictactoe.html>jogo da velha!</a></p>	
-			
-			<p>Vamos jogar o jogo da cobrinha, o famoso <a href=snake.html>Snake!</a></p>
-
-			<p>Vamos jogar o jogo da cobrinha remodelado, o famoso <a href=snake2.html>Snake!</a></p>
-		</div>
-		
-	</body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>
