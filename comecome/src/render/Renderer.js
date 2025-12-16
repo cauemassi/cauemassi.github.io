@@ -240,29 +240,29 @@ export class Renderer {
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
         this.ctx.fillStyle = '#fff';
-        this.ctx.font = 'bold 48px "Press Start 2P", monospace';
+        this.ctx.font = 'bold 64px "Press Start 2P", monospace';
         this.ctx.textAlign = 'center';
         this.ctx.textBaseline = 'middle';
         this.ctx.fillText('PAUSE', this.canvas.width / 2, this.canvas.height / 2);
     }
 
     renderHUD(score, level, specialAvailable) {
-        const padding = 10;
+        const padding = 15;
         
         this.ctx.fillStyle = '#fff';
-        this.ctx.font = '14px "Press Start 2P", monospace';
+        this.ctx.font = '18px "Press Start 2P", monospace';
         this.ctx.textAlign = 'left';
         
         // Score
-        this.ctx.fillText(`SCORE: ${score}`, padding, 20);
+        this.ctx.fillText(`SCORE: ${score}`, padding, 30);
         
         // Level
-        this.ctx.fillText(`LEVEL: ${level}`, padding, 45);
+        this.ctx.fillText(`LEVEL: ${level}`, padding, 60);
         
         // Special power-up indicator
         if (specialAvailable) {
             this.ctx.fillStyle = '#ff00ff';
-            this.ctx.fillText('SPECIAL: READY (R)', padding, 70);
+            this.ctx.fillText('SPECIAL: READY (R)', padding, 90);
         }
     }
 }

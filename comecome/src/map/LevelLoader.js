@@ -29,7 +29,7 @@ export class LevelLoader {
 
         return {
             map: baseMap,
-            tileSize: 24,
+            tileSize: 32,  // Aumentado de 24 para 32
             difficulty: this.getDifficulty(levelNumber)
         };
     }
