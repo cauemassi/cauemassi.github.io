@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Come-Come - Jogo Retrô</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+        <div id="menu" class="menu">
+            <h1 class="game-title">COME-COME</h1>
+            <div class="high-score">RECORDE: <span id="highScore">0</span></div>
+            <button id="startBtn" class="btn-start">INICIAR JOGO</button>
+            <div class="controls-info">
+                <p>CONTROLES:</p>
+                <p>WASD ou SETAS - Mover</p>
+                <p>ESPAÇO - Pausar</p>
+                <p>R - Usar Power-up Especial</p>
+            </div>
+        </div>
+        <div id="gameOver" class="game-over hidden">
+            <h2>GAME OVER</h2>
+            <p class="final-score">PONTUAÇÃO: <span id="finalScore">0</span></p>
+            <p class="credit">Feito por Caue Massi</p>
+            <button id="restartBtn" class="btn-restart">VOLTAR AO MENU</button>
+        </div>
+        <div id="mobileControls" class="mobile-controls hidden">
+            <button class="btn-mobile" data-key="up">↑</button>
+            <button class="btn-mobile" data-key="down">↓</button>
+            <button class="btn-mobile" data-key="left">←</button>
+            <button class="btn-mobile" data-key="right">→</button>
+            <button class="btn-mobile special" data-key="special">R</button>
+        </div>
+    </div>
+
+    <!-- Core -->
+    <script type="module" src="src/core/Game.js"></script>
+    <script type="module" src="src/core/GameLoop.js"></script>
+    <script type="module" src="src/core/InputHandler.js"></script>
+    <script type="module" src="src/core/StateManager.js"></script>
+    
+    <!-- Entities -->
+    <script type="module" src="src/entities/Player.js"></script>
+    <script type="module" src="src/entities/Ghost.js"></script>
+    <script type="module" src="src/entities/Pellet.js"></script>
+    <script type="module" src="src/entities/PowerUp.js"></script>
+    
+    <!-- Map -->
+    <script type="module" src="src/map/TileMap.js"></script>
+    <script type="module" src="src/map/LevelLoader.js"></script>
+    
+    <!-- AI -->
+    <script type="module" src="src/ai/GhostAI.js"></script>
+    
+    <!-- Render -->
+    <script type="module" src="src/render/Renderer.js"></script>
+    
+    <!-- UI -->
+    <script type="module" src="src/ui/Menu.js"></script>
+    <script type="module" src="src/ui/HUD.js"></script>
+
+    <!-- Initialize -->
+    <script type="module">
+        import { Game } from './src/core/Game.js';
+        window.addEventListener('DOMContentLoaded', () => {
+            const game = new Game();
+            game.init();
+        });
+    </script>
+</body>
+</html>
