@@ -1,0 +1,439 @@
+/* Import retro font */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #000;
+    color: #0f0;
+    font-family: 'Press Start 2P', 'Courier New', monospace;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+#game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background: #000;
+}
+
+/* Screens */
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 10;
+    background: #000;
+}
+
+.screen.active {
+    display: flex;
+}
+
+/* Typography */
+.game-title {
+    font-size: 4rem;
+    color: #0f0;
+    text-shadow: 0 0 10px #0f0, 0 0 20px #0f0;
+    margin-bottom: 3rem;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.menu-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.high-score, .final-score {
+    font-size: 1.2rem;
+    color: #0ff;
+}
+
+.credits {
+    font-size: 0.8rem;
+    color: #888;
+    margin-top: 2rem;
+}
+
+.new-record {
+    font-size: 1.5rem;
+    color: #ff0;
+    text-shadow: 0 0 10px #ff0;
+    animation: blink 0.5s ease-in-out infinite;
+}
+
+.new-record.hidden {
+    display: none;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+.level-message {
+    font-size: 1rem;
+    color: #0f0;
+}
+
+/* Buttons */
+.retro-button {
+    font-family: 'Press Start 2P', 'Courier New', monospace;
+    font-size: 1rem;
+    padding: 1rem 2rem;
+    background: transparent;
+    color: #0f0;
+    border: 3px solid #0f0;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
+}
+
+.retro-button:hover {
+    background: #0f0;
+    color: #000;
+    box-shadow: 0 0 20px #0f0;
+}
+
+.retro-button:active {
+    transform: scale(0.95);
+}
+
+/* HUD */
+#hud {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 5;
+    font-size: 0.8rem;
+    color: #0f0;
+    text-shadow: 0 0 5px #0f0;
+}
+
+.hud-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.health-bar-container {
+    flex: 0 0 200px;
+}
+
+.health-bar {
+    width: 150px;
+    height: 20px;
+    border: 2px solid #0f0;
+    background: #001100;
+    position: relative;
+}
+
+.health-bar-fill {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, #ff0000, #ffff00, #00ff00);
+    transition: width 0.3s ease;
+    box-shadow: 0 0 10px currentColor;
+}
+
+.super-shot-indicator {
+    color: #ffff00;
+    text-shadow: 0 0 10px #ffff00;
+    font-weight: bold;
+}
+
+/* Pause Overlay */
+#pause-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+#pause-overlay h1 {
+    font-size: 4rem;
+    color: #0f0;
+    text-shadow: 0 0 20px #0f0;
+    margin-bottom: 1rem;
+    animation: pulse 1s ease-in-out infinite;
+}
+
+#pause-overlay p {
+    font-size: 1rem;
+    color: #0ff;
+}
+
+/* Canvas */
+#game-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: #000;
+}
+
+/* Mobile Controls */
+.mobile-controls {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 200px;
+    pointer-events: none;
+    z-index: 50;
+}
+
+/* Joystick */
+.joystick-container {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    pointer-events: all;
+}
+
+.joystick-base {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: rgba(0, 255, 0, 0.1);
+    border: 3px solid rgba(0, 255, 0, 0.5);
+    position: relative;
+    touch-action: none;
+}
+
+.joystick-stick {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(0, 255, 0, 0.6);
+    border: 2px solid #0f0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.1s ease;
+    box-shadow: 0 0 20px #0f0;
+}
+
+/* Action Buttons */
+.action-buttons {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    pointer-events: all;
+}
+
+.action-btn {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid #0f0;
+    background: rgba(0, 255, 0, 0.2);
+    color: #0f0;
+    font-family: 'Press Start 2P', 'Courier New', monospace;
+    font-size: 0.6rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    touch-action: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+    transition: all 0.1s;
+}
+
+.action-btn:active {
+    background: rgba(0, 255, 0, 0.5);
+    transform: scale(0.95);
+    box-shadow: 0 0 25px #0f0;
+}
+
+.btn-super-shoot {
+    border-color: #ffff00;
+    color: #ffff00;
+    background: rgba(255, 255, 0, 0.2);
+    box-shadow: 0 0 15px rgba(255, 255, 0, 0.3);
+}
+
+.btn-super-shoot:active {
+    background: rgba(255, 255, 0, 0.5);
+    box-shadow: 0 0 25px #ffff00;
+}
+
+.action-btn span {
+    line-height: 1.2;
+    padding: 5px;
+}
+
+/* Show mobile controls on touch devices */
+@media (hover: none) and (pointer: coarse) {
+    .mobile-controls {
+        display: block;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .game-title {
+        font-size: 2rem;
+    }
+    
+    .retro-button {
+        font-size: 0.7rem;
+        padding: 0.7rem 1.5rem;
+    }
+    
+    #hud {
+        font-size: 0.5rem;
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+    
+    .hud-item {
+        font-size: 0.5rem;
+    }
+    
+    .health-bar-container {
+        flex: 0 0 auto;
+    }
+    
+    .health-bar {
+        width: 100px;
+        height: 15px;
+    }
+    
+    .super-shot-indicator {
+        font-size: 0.5rem;
+    }
+    
+    /* Garantir que os controles mobile sejam visíveis */
+    .mobile-controls {
+        display: block !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .game-title {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .menu-content {
+        gap: 1rem;
+    }
+    
+    .high-score, .final-score {
+        font-size: 0.8rem;
+    }
+    
+    .retro-button {
+        font-size: 0.6rem;
+        padding: 0.6rem 1.2rem;
+    }
+    
+    #hud {
+        font-size: 0.45rem;
+        top: 5px;
+        left: 5px;
+        right: 5px;
+    }
+    
+    .joystick-base {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .joystick-stick {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .action-btn {
+        width: 70px;
+        height: 70px;
+        font-size: 0.5rem;
+    }
+    
+    .action-buttons {
+        bottom: 15px;
+        right: 15px;
+        gap: 10px;
+    }
+    
+    .joystick-container {
+        bottom: 15px;
+        left: 15px;
+    }
+}
+
+/* Landscape mode adjustments */
+@media (max-height: 500px) and (orientation: landscape) {
+    .mobile-controls {
+        height: 150px;
+    }
+    
+    .joystick-base {
+        width: 90px;
+        height: 90px;
+    }
+    
+    .joystick-stick {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .action-btn {
+        width: 60px;
+        height: 60px;
+        font-size: 0.45rem;
+    }
+    
+    .joystick-container, .action-buttons {
+        bottom: 10px;
+    }
+    
+    #hud {
+        top: 5px;
+        font-size: 0.4rem;
+    }
+}

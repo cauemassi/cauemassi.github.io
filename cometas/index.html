@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cometas - Jogo Retrô</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="game-container">
+        <!-- Menu Screen -->
+        <div id="menu-screen" class="screen active">
+            <h1 class="game-title">COMETAS</h1>
+            <div class="menu-content">
+                <p class="high-score">Recorde: <span id="high-score-value">0</span></p>
+                <button id="start-button" class="retro-button">Iniciar Jogo</button>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="game-screen" class="screen">
+            <div id="hud">
+                <div class="hud-item">
+                    <span>Pontos: <span id="score">0</span></span>
+                </div>
+                <div class="hud-item">
+                    <span>Fase: <span id="level">1</span></span>
+                </div>
+                <div class="hud-item health-bar-container">
+                    <span>Vida:</span>
+                    <div class="health-bar">
+                        <div id="health-bar-fill" class="health-bar-fill"></div>
+                    </div>
+                </div>
+                <div class="hud-item super-shot-indicator" style="display: none;">
+                    <span>⚡ Super Tiro (R): <span id="super-shot-count">0</span></span>
+                </div>
+            </div>
+            <canvas id="game-canvas"></canvas>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div id="gameover-screen" class="screen">
+            <h1 class="game-title">GAME OVER</h1>
+            <div class="menu-content">
+                <p class="final-score">Pontuação Final: <span id="final-score-value">0</span></p>
+                <p class="new-record hidden">NOVO RECORDE!</p>
+                <p class="credits">Feito por Caue Massi</p>
+                <button id="menu-button" class="retro-button">Voltar ao Menu</button>
+            </div>
+        </div>
+
+        <!-- Level Complete Screen -->
+        <div id="level-complete-screen" class="screen">
+            <h1 class="game-title">FASE COMPLETA!</h1>
+            <div class="menu-content">
+                <p class="level-message">Preparando próxima fase...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Controls -->
+    <div id="mobile-controls" class="mobile-controls">
+        <!-- Left Joystick -->
+        <div class="joystick-container left">
+            <div id="joystick-base" class="joystick-base">
+                <div id="joystick-stick" class="joystick-stick"></div>
+            </div>
+        </div>
+        
+        <!-- Right Buttons -->
+        <div class="action-buttons">
+            <button id="btn-shoot" class="action-btn btn-shoot">
+                <span>ATIRAR</span>
+            </button>
+            <button id="btn-super-shoot" class="action-btn btn-super-shoot" style="display: none;">
+                <span>⚡ R</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Game Scripts -->
+    <script src="js/Utils.js"></script>
+    <script src="js/ProceduralSprites.js"></script>
+    <script src="js/MobileControls.js"></script>
+    <script src="js/InputManager.js"></script>
+    <script src="js/Entity.js"></script>
+    <script src="js/Ship.js"></script>
+    <script src="js/Projectile.js"></script>
+    <script src="js/SuperProjectile.js"></script>
+    <script src="js/PowerUp.js"></script>
+    <script src="js/Asteroid.js"></script>
+    <script src="js/Particle.js"></script>
+    <script src="js/CollisionSystem.js"></script>
+    <script src="js/GameState.js"></script>
+    <script src="js/Renderer.js"></script>
+    <script src="js/Game.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
