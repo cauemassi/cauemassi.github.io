@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fodinha - Jogo de Cartas</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Menu Inicial -->
+        <div id="menu-screen" class="screen active">
+            <div class="menu-container">
+                <h1 class="game-title">🃏 Fodinha</h1>
+                <p class="subtitle">Com lógica de Truco Paulista</p>
+                
+                <div class="best-score">
+                    <span>Melhor Pontuação:</span>
+                    <span id="best-score">0</span>
+                </div>
+                
+                <div class="menu-buttons">
+                    <button id="start-game" class="btn btn-primary">Iniciar Jogo</button>
+                    <button id="show-rules" class="btn btn-secondary">Ver Regras</button>
+                </div>
+                
+                <div class="credits">Feito por Caue Massi</div>
+            </div>
+        </div>
+
+        <!-- Tela de Regras -->
+        <div id="rules-screen" class="screen">
+            <div class="rules-container">
+                <h2>📜 Regras do Jogo</h2>
+                <div class="rules-content">
+                    <h3>Objetivo</h3>
+                    <p>Não perder todos os seus pontos! Cada jogador começa com 5 pontos.</p>
+                    
+                    <h3>Como Jogar</h3>
+                    <p>• Cada rodada, você recebe cartas (começa com 1, aumenta até 7, volta a 1)</p>
+                    <p>• Faça um palpite de quantas vazas você vai ganhar</p>
+                    <p>• Jogue suas cartas tentando acertar seu palpite</p>
+                    <p>• Se errar, perde 1 ponto</p>
+                    
+                    <h3>Carta Virada e Manilhas</h3>
+                    <p>• Uma carta é virada no início da rodada</p>
+                    <p>• A carta acima dela vira manilha (carta mais forte)</p>
+                    <p>• Ordem: 4 < 5 < 6 < 7 < Q < J < K < A < 2 < 3</p>
+                    
+                    <h3>Naipes das Manilhas</h3>
+                    <p>♣ Paus < ♥ Copas < ♠ Espadas < ♦ Ouros</p>
+                    
+                    <h3>Vitória</h3>
+                    <p>Seja o último jogador com pontos!</p>
+                </div>
+                <button id="back-to-menu" class="btn btn-primary">Voltar</button>
+            </div>
+        </div>
+
+        <!-- Tela do Jogo -->
+        <div id="game-screen" class="screen">
+            <div class="game-container">
+                <!-- Topo: Jogador 2 -->
+                <div class="player-area player-top">
+                    <div class="player-info" data-player="1">
+                        <span class="player-name">Jogador 2</span>
+                        <span class="player-points">❤️ 5</span>
+                        <span class="player-bet">Palpite: -</span>
+                        <span class="player-tricks">Rodadas: 0</span>
+                    </div>
+                    <div class="player-cards" id="player-1-cards"></div>
+                </div>
+
+                <!-- Centro: Mesa -->
+                <div class="game-middle">
+                    <!-- Esquerda: Jogador 3 -->
+                    <div class="player-area player-left">
+                        <div class="player-info" data-player="2">
+                            <span class="player-name">Jogador 3</span>
+                            <span class="player-points">❤️ 5</span>
+                            <span class="player-bet">Palpite: -</span>
+                            <span class="player-tricks">Rodadas: 0</span>
+                        </div>
+                        <div class="player-cards" id="player-2-cards"></div>
+                    </div>
+
+                    <!-- Mesa Central -->
+                    <div class="table-center">
+                        <div class="vira-container">
+                            <div class="vira-label">Vira:</div>
+                            <div id="vira-card" class="card-slot"></div>
+                            <div id="manilha-info" class="manilha-info"></div>
+                        </div>
+                        
+                        <div class="table-cards" id="table-cards"></div>
+                        
+                        <div id="round-info" class="round-info">
+                            <span id="round-number">Partida: 1</span>
+                            <span id="trick-number">Rodada: 1</span>
+                        </div>
+                    </div>
+
+                    <!-- Direita: Jogador 4 -->
+                    <div class="player-area player-right">
+                        <div class="player-info" data-player="3">
+                            <span class="player-name">Jogador 4</span>
+                            <span class="player-points">❤️ 5</span>
+                            <span class="player-bet">Palpite: -</span>
+                            <span class="player-tricks">Rodadas: 0</span>
+                        </div>
+                        <div class="player-cards" id="player-3-cards"></div>
+                    </div>
+                </div>
+
+                <!-- Fundo: Jogador 1 (Humano) -->
+                <div class="player-area player-bottom">
+                    <div class="player-info" data-player="0">
+                        <span class="player-name">Você</span>
+                        <span class="player-points">❤️ 5</span>
+                        <span class="player-bet">Palpite: -</span>
+                        <span class="player-tricks">Rodadas: 0</span>
+                    </div>
+                    <div class="player-cards" id="player-0-cards"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Aposta -->
+        <div id="bet-modal" class="modal bet-modal">
+            <div class="modal-content bet-modal-content">
+                <h2>Faça seu palpite</h2>
+                
+                <!-- Mostra a vira e manilha -->
+                <div class="bet-modal-vira">
+                    <div class="bet-vira-label">Vira: <span id="bet-vira-value"></span></div>
+                    <div class="bet-manilha-label">Manilha: <span id="bet-manilha-value"></span></div>
+                </div>
+                
+                <!-- Mostra as cartas do jogador -->
+                <div class="bet-modal-cards">
+                    <div class="bet-cards-label">Suas cartas:</div>
+                    <div id="bet-player-cards" class="bet-cards-container"></div>
+                </div>
+                
+                <p id="bet-question">Quantas rodadas você acredita que vai ganhar?</p>
+                <div id="bet-buttons" class="bet-buttons"></div>
+            </div>
+        </div>
+
+        <!-- Modal de Notificação (Apostas e Jogadas da IA) -->
+        <div id="notification-modal" class="modal notification-modal">
+            <div class="modal-content notification-content">
+                <div id="notification-message"></div>
+            </div>
+        </div>
+
+        <!-- Modal de Resumo da Rodada (Vaza) -->
+        <div id="trick-summary-modal" class="modal">
+            <div class="modal-content">
+                <h2>Resultado da Rodada</h2>
+                <div id="trick-summary-content"></div>
+                <button id="trick-summary-close" class="btn btn-primary">Continuar</button>
+            </div>
+        </div>
+
+        <!-- Modal de Fim de Rodada -->
+        <div id="round-end-modal" class="modal">
+            <div class="modal-content">
+                <h2>Fim da Rodada</h2>
+                <div id="round-summary" class="round-summary"></div>
+                <button id="next-round" class="btn btn-primary">Próxima Rodada</button>
+            </div>
+        </div>
+
+        <!-- Modal de Fim de Jogo -->
+        <div id="game-end-modal" class="modal">
+            <div class="modal-content">
+                <h2>🏆 Fim de Jogo!</h2>
+                <div id="game-summary" class="game-summary"></div>
+                <div class="end-buttons">
+                    <button id="play-again" class="btn btn-primary">Jogar Novamente</button>
+                    <button id="back-to-menu-2" class="btn btn-secondary">Voltar ao Menu</button>
+                </div>
+                <div class="credits">Feito por Caue Massi</div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="src/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,858 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-primary: #0f4c3a;
+    --bg-secondary: #1a6b4f;
+    --table-green: #1e7a5f;
+    --card-bg: white;
+    --text-light: #ffffff;
+    --text-dark: #2c3e50;
+    --accent: #f39c12;
+    --danger: #e74c3c;
+    --success: #27ae60;
+    --shadow: rgba(0, 0, 0, 0.3);
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    min-height: 100vh;
+    color: var(--text-light);
+}
+
+/* Screens */
+.screen {
+    display: none;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.screen.active {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Menu */
+.menu-container {
+    text-align: center;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 60px 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px var(--shadow);
+}
+
+.game-title {
+    font-size: 4em;
+    margin-bottom: 10px;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+}
+
+.subtitle {
+    font-size: 1.2em;
+    margin-bottom: 30px;
+    opacity: 0.9;
+}
+
+.best-score {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px 30px;
+    border-radius: 10px;
+    margin: 20px 0;
+    font-size: 1.2em;
+}
+
+.menu-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.btn {
+    padding: 15px 40px;
+    font-size: 1.1em;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.btn-primary {
+    background: var(--accent);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #e67e22;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(243, 156, 18, 0.4);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.credits {
+    margin-top: 30px;
+    opacity: 0.7;
+    font-size: 0.9em;
+}
+
+/* Rules Screen */
+.rules-container {
+    max-width: 700px;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px var(--shadow);
+}
+
+.rules-container h2 {
+    font-size: 2.5em;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.rules-content {
+    margin-bottom: 30px;
+    line-height: 1.8;
+}
+
+.rules-content h3 {
+    color: var(--accent);
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.rules-content p {
+    margin: 5px 0;
+    padding-left: 10px;
+}
+
+/* Game Screen */
+.game-container {
+    width: 100%;
+    max-width: 1400px;
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.game-middle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex: 1;
+}
+
+/* Player Areas */
+.player-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.player-top, .player-bottom {
+    width: 100%;
+}
+
+.player-left, .player-right {
+    width: 200px;
+}
+
+.player-info {
+    background: rgba(0, 0, 0, 0.4);
+    padding: 10px 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 150px;
+    transition: all 0.3s;
+}
+
+.player-info.active {
+    background: rgba(243, 156, 18, 0.4);
+    box-shadow: 0 0 20px rgba(243, 156, 18, 0.6);
+}
+
+.player-info.eliminated {
+    opacity: 0.4;
+    text-decoration: line-through;
+}
+
+.player-name {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.player-cards {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* Table Center */
+.table-center {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    max-width: 600px;
+}
+
+.vira-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 15px 25px;
+    border-radius: 10px;
+}
+
+.vira-label {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.manilha-info {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: var(--accent);
+}
+
+.table-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    min-height: 200px;
+    align-items: center;
+    justify-items: center;
+}
+
+.round-info {
+    display: flex;
+    gap: 30px;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+/* Cards */
+.card {
+    width: 80px;
+    height: 112px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px var(--shadow);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px var(--shadow);
+}
+
+.card.disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.card.disabled:hover {
+    transform: none;
+}
+
+.card.animating {
+    animation: cardToTable 0.6s ease-out forwards;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+@keyframes cardToTable {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(-100px) scale(1.1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(-200px) scale(0.9);
+        opacity: 0;
+    }
+}
+
+.card-back {
+    width: 80px;
+    height: 112px;
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px var(--shadow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+}
+
+.card-value {
+    font-size: 1.4em;
+    font-weight: bold;
+}
+
+.card-suit {
+    font-size: 2em;
+    text-align: center;
+}
+
+.card.red {
+    color: #e74c3c;
+}
+
+.card.black {
+    color: #2c3e50;
+}
+
+.card.manilha {
+    box-shadow: 0 0 15px var(--accent), 0 4px 8px var(--shadow);
+    border: 2px solid var(--accent);
+}
+
+.card-slot {
+    min-width: 80px;
+    min-height: 112px;
+}
+
+.table-card {
+    position: relative;
+    animation: playCard 0.5s ease-out;
+}
+
+@keyframes playCard {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Modals */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: var(--table-green);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px var(--shadow);
+    max-width: 600px;
+    text-align: center;
+}
+
+.modal-content h2 {
+    margin-bottom: 20px;
+    font-size: 2em;
+}
+
+/* Modal de Aposta - Redesenhado */
+.bet-modal {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.bet-modal-content {
+    background: linear-gradient(135deg, var(--table-green) 0%, var(--bg-secondary) 100%);
+    padding: 25px 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px var(--shadow);
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    border: 3px solid var(--accent);
+}
+
+.bet-modal-content h2 {
+    font-size: 1.6em;
+    margin-bottom: 15px;
+    color: var(--accent);
+}
+
+.bet-modal-content p {
+    font-size: 1em;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+/* Vira e Manilha no modal */
+.bet-modal-vira {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.bet-vira-label, .bet-manilha-label {
+    font-size: 1em;
+    font-weight: bold;
+}
+
+.bet-vira-label span, .bet-manilha-label span {
+    color: var(--accent);
+    font-size: 1.2em;
+}
+
+/* Cartas no modal de aposta */
+.bet-modal-cards {
+    margin-bottom: 20px;
+}
+
+.bet-cards-label {
+    font-size: 1em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.bet-cards-container {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+}
+
+.bet-cards-container .card {
+    width: 60px;
+    height: 84px;
+    padding: 6px;
+    cursor: default;
+    pointer-events: none;
+}
+
+.bet-cards-container .card-value {
+    font-size: 1.1em;
+}
+
+.bet-cards-container .card-suit {
+    font-size: 1.5em;
+}
+
+/* Modal de Notificação */
+.notification-modal {
+    pointer-events: none;
+}
+
+.notification-content {
+    background: linear-gradient(135deg, rgba(243, 156, 18, 0.95) 0%, rgba(230, 126, 34, 0.95) 100%);
+    padding: 25px 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(243, 156, 18, 0.5);
+    min-width: 300px;
+    max-width: 500px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    animation: notificationPulse 0.3s ease-out;
+}
+
+@keyframes notificationPulse {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+#notification-message {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Modal de Resumo da Rodada */
+#trick-summary-modal .modal-content {
+    max-width: 600px;
+    width: 90%;
+}
+
+#trick-summary-content {
+    margin: 20px 0;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+.trick-play {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    margin: 8px 0;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    border-left: 4px solid transparent;
+}
+
+.trick-play.winner {
+    background: rgba(243, 156, 18, 0.3);
+    border-left-color: var(--accent);
+}
+
+.trick-play-player {
+    font-weight: bold;
+    font-size: 1.1em;
+    flex: 1;
+}
+
+.trick-play-card {
+    display: inline-block;
+    padding: 8px 16px;
+    background: white;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    font-size: 1.2em;
+    font-weight: bold;
+    min-width: 60px;
+    text-align: center;
+}
+
+.trick-play-card.red {
+    color: #e74c3c;
+}
+
+.trick-play-card.black {
+    color: #2c3e50;
+}
+
+.trick-winner-announcement {
+    margin-top: 20px;
+    padding: 15px;
+    background: linear-gradient(135deg, rgba(243, 156, 18, 0.3), rgba(230, 126, 34, 0.3));
+    border-radius: 10px;
+    border: 2px solid var(--accent);
+    text-align: center;
+}
+
+.trick-winner-announcement h3 {
+    margin: 0;
+    font-size: 1.4em;
+    color: var(--accent);
+}
+
+#trick-summary-close {
+    margin-top: 15px;
+    width: 100%;
+    padding: 15px;
+    font-size: 1.1em;
+}
+
+.bet-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.bet-buttons .btn {
+    min-width: 60px;
+    padding: 15px 20px;
+}
+
+.round-summary, .game-summary {
+    margin: 20px 0;
+    text-align: left;
+}
+
+.round-summary p, .game-summary p {
+    margin: 10px 0;
+    font-size: 1.1em;
+}
+
+.player-summary {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    border-radius: 10px;
+    margin: 10px 0;
+}
+
+.player-summary.success {
+    border-left: 4px solid var(--success);
+}
+
+.player-summary.error {
+    border-left: 4px solid var(--danger);
+}
+
+.player-summary.winner {
+    background: rgba(243, 156, 18, 0.3);
+    border: 2px solid var(--accent);
+}
+
+.end-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .game-container {
+        height: auto;
+    }
+    
+    .card {
+        width: 60px;
+        height: 84px;
+        padding: 6px;
+    }
+    
+    .card-back {
+        width: 60px;
+        height: 84px;
+    }
+    
+    .card-value {
+        font-size: 1.1em;
+    }
+    
+    .card-suit {
+        font-size: 1.5em;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
+    }
+
+    .game-title {
+        font-size: 2.5em;
+    }
+    
+    .game-container {
+        padding: 10px;
+    }
+    
+    .game-middle {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .player-left, .player-right {
+        width: 100%;
+        flex-direction: row;
+        justify-content: center;
+    }
+    
+    .player-info {
+        min-width: 120px;
+        padding: 8px 12px;
+        font-size: 0.9em;
+    }
+    
+    .card {
+        width: 50px;
+        height: 70px;
+        padding: 4px;
+    }
+    
+    .card-back {
+        width: 50px;
+        height: 70px;
+        font-size: 1.5em;
+    }
+    
+    .card-value {
+        font-size: 1em;
+    }
+    
+    .card-suit {
+        font-size: 1.3em;
+    }
+    
+    .vira-container {
+        flex-direction: column;
+        padding: 10px 15px;
+        gap: 8px;
+    }
+    
+    .table-cards {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    
+    .round-info {
+        flex-direction: column;
+        gap: 5px;
+        font-size: 0.9em;
+    }
+    
+    /* Modais */
+    .modal-content {
+        padding: 25px;
+        max-width: 90%;
+    }
+    
+    .bet-modal-content {
+        padding: 20px;
+    }
+    
+    .bet-modal-content h2 {
+        font-size: 1.3em;
+    }
+    
+    .bet-buttons .btn {
+        min-width: 50px;
+        padding: 12px 15px;
+        font-size: 1em;
+    }
+    
+    .notification-content {
+        padding: 20px 30px;
+        min-width: 250px;
+        font-size: 1em;
+    }
+    
+    #notification-message {
+        font-size: 1.1em;
+    }
+    
+    /* Menu */
+    .menu-container {
+        padding: 40px 25px;
+    }
+    
+    .rules-container {
+        padding: 25px;
+    }
+    
+    .rules-container h2 {
+        font-size: 2em;
+    }
+}
+
+@media (max-width: 480px) {
+    .game-title {
+        font-size: 2em;
+    }
+    
+    .card {
+        width: 45px;
+        height: 63px;
+        padding: 3px;
+    }
+    
+    .card-back {
+        width: 45px;
+        height: 63px;
+        font-size: 1.2em;
+    }
+    
+    .card-value {
+        font-size: 0.9em;
+    }
+    
+    .card-suit {
+        font-size: 1.1em;
+    }
+    
+    .player-info {
+        min-width: 100px;
+        padding: 6px 10px;
+        font-size: 0.8em;
+    }
+    
+    .player-name {
+        font-size: 1em;
+    }
+    
+    .table-cards {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        min-height: 120px;
+    }
+    
+    .bet-cards-container .card {
+        width: 50px;
+        height: 70px;
+    }
+    
+    .modal-content h2 {
+        font-size: 1.5em;
+    }
+    
+    .bet-modal-vira {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+
+/* Landscape mobile */
+@media (max-width: 900px) and (orientation: landscape) {
+    .game-container {
+        height: auto;
+        max-height: 100vh;
+    }
+    
+    .player-area {
+        gap: 8px;
+    }
+    
+    .game-middle {
+        flex-direction: row;
+    }
+    
+    .table-center {
+        max-width: 400px;
+    }
+}
