@@ -12,7 +12,7 @@ export class Card {
 
     // Retorna a hierarquia dos naipes (para manilhas)
     static getSuitHierarchy() {
-        return ['C', 'H', 'S', 'D']; // Paus < Copas < Espadas < Ouros
+        return ['D', 'S', 'H', 'C']; // Ouros > Espadas > Copas > Paus
     }
 
     // Retorna o símbolo do naipe

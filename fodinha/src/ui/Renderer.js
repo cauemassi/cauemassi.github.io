@@ -303,7 +303,9 @@ export class Renderer {
         
         if (isLastPlayer) {
             const forbiddenBet = gameState.numCards - currentBets.reduce((a, b) => a + b, 0);
-            question += ` (Não pode apostar ${forbiddenBet})`;
+            if (forbiddenBet < 0) {
+                question += ` (Não pode apostar ${forbiddenBet})`;
+            }
         }
         
         this.elements.betQuestion.textContent = question;
