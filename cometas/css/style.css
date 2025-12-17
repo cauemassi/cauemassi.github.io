@@ -324,15 +324,30 @@ body {
 /* Action Buttons */
 .action-buttons {
     position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    flex-direction: row;
-    gap: 15px;
+    bottom: 30px;
+    right: 30px;
+    display: grid;
+    grid-template-columns: repeat(2, 80px);
+    grid-template-rows: repeat(2, 80px);
+    gap: 10px;
     pointer-events: all;
-    justify-content: center;
-    align-items: center;
+    transform: rotate(-15deg);
+}
+
+/* Posicionamento estilo GameBoy */
+.btn-super-shoot {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.btn-pause {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.btn-shoot {
+    grid-column: 2;
+    grid-row: 2;
 }
 
 .action-btn {
@@ -354,11 +369,12 @@ body {
     -webkit-tap-highlight-color: transparent;
     box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
     transition: all 0.1s;
+    transform: rotate(15deg);
 }
 
 .action-btn:active {
     background: rgba(0, 255, 0, 0.5);
-    transform: scale(0.95);
+    transform: rotate(15deg) scale(0.95);
     box-shadow: 0 0 25px #0f0;
 }
 
@@ -411,16 +427,17 @@ body {
     }
     
     #hud {
-        font-size: 0.5rem;
+        font-size: 0.9rem;
         top: 10px;
         left: 10px;
         right: 10px;
-        flex-wrap: wrap;
-        gap: 5px;
+        flex-wrap: nowrap;
+        gap: 10px;
     }
     
     .hud-item {
-        font-size: 0.5rem;
+        font-size: 0.9rem;
+        white-space: nowrap;
     }
     
     .health-bar-container {
@@ -428,8 +445,8 @@ body {
     }
     
     .health-bar {
-        width: 100px;
-        height: 15px;
+        width: 120px;
+        height: 20px;
     }
     
     .super-shot-indicator {

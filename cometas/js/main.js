@@ -40,16 +40,16 @@ function initializeUI() {
     
     // Botões da tela de opções
     document.getElementById('back-to-menu').addEventListener('click', backToMenuFromOptions);
-    document.getElementById('volume-up').addEventListener('click', volumeUp);
-    document.getElementById('volume-down').addEventListener('click', volumeDown);
-    document.getElementById('mute-button').addEventListener('click', toggleMute);
+    setupVolumeButton('volume-up', volumeUp);
+    setupVolumeButton('volume-down', volumeDown);
+    setupVolumeButton('mute-button', toggleMute);
     
     // Botões da tela de pausa
     document.getElementById('resume-button').addEventListener('click', resumeGame);
     document.getElementById('pause-menu-button').addEventListener('click', backToMenuFromPause);
-    document.getElementById('pause-volume-up').addEventListener('click', volumeUp);
-    document.getElementById('pause-volume-down').addEventListener('click', volumeDown);
-    document.getElementById('pause-mute-button').addEventListener('click', toggleMute);
+    setupVolumeButton('pause-volume-up', volumeUp);
+    setupVolumeButton('pause-volume-down', volumeDown);
+    setupVolumeButton('pause-mute-button', toggleMute);
     
     // Botão de pausa mobile
     const btnPause = document.getElementById('btn-pause');
@@ -59,6 +59,20 @@ function initializeUI() {
             e.stopPropagation();
             togglePause();
         }, { passive: false });
+    }
+}
+
+/**
+ * Configura botão para funcionar com click e touch
+ */
+function setupVolumeButton(buttonId, handler) {
+    const button = document.getElementById(buttonId);
+    if (button) {
+        button.addEventListener('click', handler);
+        button.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            handler();
+        });
     }
 }
 
