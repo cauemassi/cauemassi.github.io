@@ -96,6 +96,7 @@ function setupMusic() {
     backgroundMusic = document.getElementById('background-music');
     if (backgroundMusic) {
         backgroundMusic.volume = currentVolume;
+        backgroundMusic.load(); // Carrega o áudio
     }
 }
 
@@ -103,22 +104,18 @@ function setupMusic() {
  * Desbloqueia áudio em mobile (requer interação do usuário)
  */
 function unlockAudioContext() {
-    const unlockAudio = () => {
+    const unlockAudio = (e) => {
         if (backgroundMusic && !musicUnlocked) {
-            backgroundMusic.play().then(() => {
-                backgroundMusic.pause();
-                backgroundMusic.currentTime = 0;
-                musicUnlocked = true;
-                console.log('Áudio desbloqueado');
-            }).catch(e => {
-                console.log('Áudio ainda bloqueado');
-            });
+            // Não faz nada aqui, apenas marca como desbloqueado
+            // O play será feito quando o usuário clicar em "Iniciar Jogo"
+            musicUnlocked = true;
+            console.log('Contexto de áudio desbloqueado');
         }
     };
     
-    // Tenta desbloquear em qualquer interação
-    document.addEventListener('touchstart', unlockAudio, { once: true });
+    // Tenta desbloquear no primeiro click
     document.addEventListener('click', unlockAudio, { once: true });
+    document.addEventListener('touchend', unlockAudio, { once: true });
 }
 
 /**
@@ -233,17 +230,20 @@ function updateMuteUI() {
 /**
  * Inicia o jogo
  */
-function startGame() {
+async function startGame() {
     // Esconde menu, mostra tela de jogo
     document.getElementById('menu-screen').classList.remove('active');
     document.getElementById('game-screen').classList.add('active');
     
     // Inicia música
     if (backgroundMusic) {
-        backgroundMusic.currentTime = 0;
-        backgroundMusic.play().catch(e => {
+        try {
+            backgroundMusic.currentTime = 0;
+            await backgroundMusic.play();
+            console.log('Música iniciada com sucesso');
+        } catch (e) {
             console.warn('Erro ao tocar música:', e);
-        });
+        }
     }
     
     // Cria nova instância do jogo
@@ -282,11 +282,21 @@ function backToMenu() {
 /**
  * Reinicia o jogo
  */
-function restartGame() {
+async function restartGame() {
     // Esconde game over, mostra jogo
     document.getElementById('gameover-screen').classList.remove('active');
     document.getElementById('game-screen').classList.add('active');
 
+    // Inicia música
+    if (backgroundMusic) {
+        try {
+            backgroundMusic.currentTime = 0;
+            await backgroundMusic.play();
+            console.log('Música reiniciada com sucesso');
+        } catch (e) {
+            console.warn('Erro ao tocar música:', e);
+        }
+    }
     
     // Cria nova instância do jogo
     if (game) {
