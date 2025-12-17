@@ -211,22 +211,22 @@ class MobileControls {
      * Verifica se está atirando
      */
     isShooting() {
-        if (this.buttons.shoot) {
-            this.buttons.shoot = false; // Reset para simular "just pressed"
-            return true;
-        }
-        return false;
+        return this.buttons.shoot;
     }
 
     /**
      * Verifica se está usando super tiro
      */
     isUsingSuperShot() {
-        if (this.buttons.superShoot) {
-            this.buttons.superShoot = false; // Reset para simular "just pressed"
-            return true;
-        }
-        return false;
+        return this.buttons.superShoot;
+    }
+    
+    /**
+     * Reseta flags de botões (chamar após processar input)
+     */
+    resetButtons() {
+        this.buttons.shoot = false;
+        this.buttons.superShoot = false;
     }
 
     /**

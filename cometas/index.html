@@ -14,6 +14,29 @@
             <div class="menu-content">
                 <p class="high-score">Recorde: <span id="high-score-value">0</span></p>
                 <button id="start-button" class="retro-button">Iniciar Jogo</button>
+                <button id="options-button" class="retro-button">Opções</button>
+            </div>
+        </div>
+
+        <!-- Options Screen -->
+        <div id="options-screen" class="screen">
+            <h1 class="game-title">OPÇÕES</h1>
+            <div class="menu-content">
+                <div class="option-group">
+                    <label class="option-label">Volume da Música</label>
+                    <div class="volume-control">
+                        <button id="volume-down" class="volume-btn">-</button>
+                        <div class="volume-bar">
+                            <div id="volume-fill" class="volume-fill"></div>
+                        </div>
+                        <button id="volume-up" class="volume-btn">+</button>
+                        <span id="volume-percent" class="volume-percent">30%</span>
+                    </div>
+                </div>
+                <div class="option-group">
+                    <button id="mute-button" class="retro-button mute-button">🔊 Som Ligado</button>
+                </div>
+                <button id="back-to-menu" class="retro-button">Voltar</button>
             </div>
         </div>
 
@@ -50,6 +73,29 @@
             </div>
         </div>
 
+        <!-- Pause Screen -->
+        <div id="pause-screen" class="screen">
+            <h1 class="game-title">PAUSA</h1>
+            <div class="menu-content">
+                <div class="option-group">
+                    <label class="option-label">Volume da Música</label>
+                    <div class="volume-control">
+                        <button id="pause-volume-down" class="volume-btn">-</button>
+                        <div class="volume-bar">
+                            <div id="pause-volume-fill" class="volume-fill"></div>
+                        </div>
+                        <button id="pause-volume-up" class="volume-btn">+</button>
+                        <span id="pause-volume-percent" class="volume-percent">30%</span>
+                    </div>
+                </div>
+                <div class="option-group">
+                    <button id="pause-mute-button" class="retro-button mute-button">🔊 Som Ligado</button>
+                </div>
+                <button id="resume-button" class="retro-button">Continuar</button>
+                <button id="pause-menu-button" class="retro-button">Voltar ao Menu</button>
+            </div>
+        </div>
+
         <!-- Level Complete Screen -->
         <div id="level-complete-screen" class="screen">
             <h1 class="game-title">FASE COMPLETA!</h1>
@@ -76,8 +122,16 @@
             <button id="btn-super-shoot" class="action-btn btn-super-shoot" style="display: none;">
                 <span>⚡ R</span>
             </button>
+            <button id="btn-pause" class="action-btn btn-pause">
+                <span>⏸</span>
+            </button>
         </div>
     </div>
+
+    <!-- Background Music -->
+    <audio id="background-music" loop>
+        <source src="music/cometas.mp3" type="audio/mpeg">
+    </audio>
 
     <!-- Game Scripts -->
     <script src="js/Utils.js"></script>

@@ -49,23 +49,24 @@ class InputManager {
             this.mouse.pressed = false;
         });
 
-        // Touch support para mobile
-        window.addEventListener('touchmove', (e) => {
+        // Touch support para mobile (somente no canvas)
+        const canvas = document.getElementById('game-canvas');
+        
+        canvas.addEventListener('touchmove', (e) => {
             e.preventDefault();
-            const canvas = document.getElementById('game-canvas');
             const rect = canvas.getBoundingClientRect();
             const touch = e.touches[0];
             this.mouse.x = touch.clientX - rect.left;
             this.mouse.y = touch.clientY - rect.top;
         }, { passive: false });
 
-        window.addEventListener('touchstart', (e) => {
+        canvas.addEventListener('touchstart', (e) => {
             e.preventDefault();
             this.mouse.pressed = true;
             this.mouse.justPressed = true;
         }, { passive: false });
 
-        window.addEventListener('touchend', (e) => {
+        canvas.addEventListener('touchend', (e) => {
             e.preventDefault();
             this.mouse.pressed = false;
         }, { passive: false });
@@ -136,6 +137,7 @@ class InputManager {
      */
     resetJustPressed() {
         this.mouse.justPressed = false;
+        this.mobileControls.resetButtons();
     }
 
     /**

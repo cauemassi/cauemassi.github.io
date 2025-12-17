@@ -327,15 +327,16 @@ class Game {
      * Mostra/esconde overlay de pausa
      */
     showPauseOverlay(show) {
-        let overlay = document.getElementById('pause-overlay');
-        if (!overlay && show) {
-            overlay = document.createElement('div');
-            overlay.id = 'pause-overlay';
-            overlay.innerHTML = '<h1>PAUSA</h1><p>Pressione ESC para continuar</p>';
-            document.getElementById('game-screen').appendChild(overlay);
-        }
-        if (overlay) {
-            overlay.style.display = show ? 'flex' : 'none';
+        const pauseScreen = document.getElementById('pause-screen');
+        if (pauseScreen) {
+            if (show) {
+                pauseScreen.classList.add('active');
+                // Atualiza UI de volume
+                window.updateVolumeUI();
+                window.updateMuteUI();
+            } else {
+                pauseScreen.classList.remove('active');
+            }
         }
     }
 
