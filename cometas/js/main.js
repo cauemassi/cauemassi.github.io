@@ -9,6 +9,7 @@ let game = null;
 let backgroundMusic = null;
 let isMuted = false;
 let currentVolume = 0.3;
+let musicUnlocked = false;
 
 /**
  * Inicialização quando DOM estiver pronto
@@ -18,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadHighScore();
     setupMusic();
     loadSettings();
+    unlockAudioContext();
 });
 
 /**
@@ -49,7 +51,11 @@ function initializeUI() {
     // Botão de pausa mobile
     const btnPause = document.getElementById('btn-pause');
     if (btnPause) {
-        btnPause.addEventListener('click', togglePause);
+        btnPause.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            togglePause();
+        }, { passive: false });
     }
 }
 
@@ -74,6 +80,28 @@ function setupMusic() {
     if (backgroundMusic) {
         backgroundMusic.volume = currentVolume;
     }
+}
+
+/**
+ * Desbloqueia áudio em mobile (requer interação do usuário)
+ */
+function unlockAudioContext() {
+    const unlockAudio = () => {
+        if (backgroundMusic && !musicUnlocked) {
+            backgroundMusic.play().then(() => {
+                backgroundMusic.pause();
+                backgroundMusic.currentTime = 0;
+                musicUnlocked = true;
+                console.log('Áudio desbloqueado');
+            }).catch(e => {
+                console.log('Áudio ainda bloqueado');
+            });
+        }
+    };
+    
+    // Tenta desbloquear em qualquer interação
+    document.addEventListener('touchstart', unlockAudio, { once: true });
+    document.addEventListener('click', unlockAudio, { once: true });
 }
 
 /**
@@ -197,7 +225,7 @@ function startGame() {
     if (backgroundMusic) {
         backgroundMusic.currentTime = 0;
         backgroundMusic.play().catch(e => {
-            console.warn('Não foi possível tocar música:', e);
+            console.warn('Erro ao tocar música:', e);
         });
     }
     

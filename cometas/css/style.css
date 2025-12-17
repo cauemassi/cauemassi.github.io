@@ -325,28 +325,31 @@ body {
 .action-buttons {
     position: absolute;
     bottom: 20px;
-    right: 20px;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 15px;
     pointer-events: all;
+    justify-content: center;
+    align-items: center;
 }
 
 .action-btn {
-    width: 80px;
-    height: 80px;
+    width: 70px;
+    height: 70px;
     border-radius: 50%;
     border: 3px solid #0f0;
     background: rgba(0, 255, 0, 0.2);
     color: #0f0;
     font-family: 'Press Start 2P', 'Courier New', monospace;
-    font-size: 0.6rem;
+    font-size: 1.5rem;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    touch-action: none;
+    touch-action: manipulation;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
     box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);

@@ -22,7 +22,9 @@ class MobileControls {
         
         this.buttons = {
             shoot: false,
-            superShoot: false
+            superShoot: false,
+            shootJustPressed: false,
+            superShootJustPressed: false
         };
         
         this.elements = {
@@ -72,26 +74,40 @@ class MobileControls {
         this.elements.joystickBase.addEventListener('touchend', (e) => this.onJoystickEnd(e), { passive: false });
 
         // Shoot button
-        this.elements.btnShoot.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            this.buttons.shoot = true;
-        }, { passive: false });
-        
-        this.elements.btnShoot.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            this.buttons.shoot = false;
-        }, { passive: false });
+        if (this.elements.btnShoot) {
+            this.elements.btnShoot.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (!this.buttons.shoot) {
+                    this.buttons.shoot = true;
+                    this.buttons.shootJustPressed = true;
+                }
+            }, { passive: false });
+            
+            this.elements.btnShoot.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.buttons.shoot = false;
+            }, { passive: false });
+        }
 
         // Super shoot button
-        this.elements.btnSuperShoot.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            this.buttons.superShoot = true;
-        }, { passive: false });
-        
-        this.elements.btnSuperShoot.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            this.buttons.superShoot = false;
-        }, { passive: false });
+        if (this.elements.btnSuperShoot) {
+            this.elements.btnSuperShoot.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (!this.buttons.superShoot) {
+                    this.buttons.superShoot = true;
+                    this.buttons.superShootJustPressed = true;
+                }
+            }, { passive: false });
+            
+            this.elements.btnSuperShoot.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.buttons.superShoot = false;
+            }, { passive: false });
+        }
     }
 
     /**
@@ -211,22 +227,24 @@ class MobileControls {
      * Verifica se está atirando
      */
     isShooting() {
-        return this.buttons.shoot;
+        const result = this.buttons.shootJustPressed;
+        return result;
     }
 
     /**
      * Verifica se está usando super tiro
      */
     isUsingSuperShot() {
-        return this.buttons.superShoot;
+        const result = this.buttons.superShootJustPressed;
+        return result;
     }
     
     /**
      * Reseta flags de botões (chamar após processar input)
      */
     resetButtons() {
-        this.buttons.shoot = false;
-        this.buttons.superShoot = false;
+        this.buttons.shootJustPressed = false;
+        this.buttons.superShootJustPressed = false;
     }
 
     /**
