@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Render</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <style>
+        body { padding: 20px; }
+        .test-container { display: flex; gap: 20px; flex-wrap: wrap; }
+        .test-pile { border: 2px solid yellow; }
+    </style>
+</head>
+<body>
+    <h1>Test Pile Rendering</h1>
+    <div class="test-container">
+        <div class="pile stock-pile test-pile" id="test-stock">
+            <div class="card red">
+                <div class="card-content">
+                    <span class="card-rank">K</span>
+                    <span class="card-suit">♥</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="pile waste-pile test-pile" id="test-waste">
+            <div class="card black">
+                <div class="card-content">
+                    <span class="card-rank">A</span>
+                    <span class="card-suit">♠</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="pile tableau-pile test-pile" id="test-tableau">
+            <div class="card red" style="top: 0px;">
+                <div class="card-content">
+                    <span class="card-rank">Q</span>
+                    <span class="card-suit">♦</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="pile foundation-pile has-cards test-pile" id="test-foundation">
+            <div class="card black">
+                <div class="card-content">
+                    <span class="card-rank">7</span>
+                    <span class="card-suit">♣</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <p>Se você vê 4 cartas acima, o CSS está OK!</p>
+</body>
+</html>

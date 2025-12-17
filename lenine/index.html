@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1a5f3c">
+    <meta name="description" content="Lenine - Jogo de Paciência Klondike clássico">
+    <title>🃏 Lenine - Paciência</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <!-- Menu Screen -->
+    <div id="menu-screen" class="screen active">
+        <div class="menu-container">
+            <h1 class="game-title">🃏 LENINE</h1>
+            <p class="game-subtitle">Paciência Klondike</p>
+            
+            <div class="menu-buttons">
+                <button id="btn-new-game" class="btn btn-primary">Novo Jogo</button>
+                <button id="btn-continue" class="btn btn-secondary" disabled>Continuar</button>
+                <button id="btn-stats" class="btn btn-secondary">Estatísticas</button>
+            </div>
+            
+            <div class="best-scores">
+                <div class="score-item">
+                    <span class="score-label">🏆 Melhor Tempo</span>
+                    <span id="best-time" class="score-value">--:--</span>
+                </div>
+                <div class="score-item">
+                    <span class="score-label">⭐ Melhor Pontuação</span>
+                    <span id="best-score" class="score-value">---</span>
+                </div>
+            </div>
+            
+            <footer class="credits">
+                <p>Feito por <strong>Caue Massi</strong></p>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Stats Screen -->
+    <div id="stats-screen" class="screen">
+        <div class="stats-container">
+            <h2>📊 Estatísticas</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-value" id="total-games">0</span>
+                    <span class="stat-label">Jogos</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="wins">0</span>
+                    <span class="stat-label">Vitórias</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="win-rate">0%</span>
+                    <span class="stat-label">Taxa de Vitória</span>
+                </div>
+            </div>
+            <button id="btn-back-menu" class="btn btn-primary">Voltar</button>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" class="screen">
+        <header class="game-header">
+            <div class="header-info">
+                <div class="info-item">
+                    <span class="info-label">⏱️</span>
+                    <span id="game-time" class="info-value">00:00</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">⭐</span>
+                    <span id="game-score" class="info-value">0</span>
+                </div>
+            </div>
+            <button id="btn-pause" class="btn-icon" aria-label="Pausar">⏸️</button>
+        </header>
+
+        <main class="game-board">
+            <!-- Top Area: Foundations and Stock -->
+            <div class="top-area">
+                <div class="stock-waste">
+                    <div id="stock" class="pile stock-pile" data-pile="stock"></div>
+                    <div id="waste" class="pile waste-pile" data-pile="waste"></div>
+                </div>
+                <div class="foundations">
+                    <div id="foundation-0" class="pile foundation-pile" data-pile="foundation" data-suit="spades">♠</div>
+                    <div id="foundation-1" class="pile foundation-pile" data-pile="foundation" data-suit="hearts">♥</div>
+                    <div id="foundation-2" class="pile foundation-pile" data-pile="foundation" data-suit="diamonds">♦</div>
+                    <div id="foundation-3" class="pile foundation-pile" data-pile="foundation" data-suit="clubs">♣</div>
+                </div>
+            </div>
+
+            <!-- Tableau -->
+            <div class="tableau">
+                <div id="tableau-0" class="pile tableau-pile" data-pile="tableau" data-index="0"></div>
+                <div id="tableau-1" class="pile tableau-pile" data-pile="tableau" data-index="1"></div>
+                <div id="tableau-2" class="pile tableau-pile" data-pile="tableau" data-index="2"></div>
+                <div id="tableau-3" class="pile tableau-pile" data-pile="tableau" data-index="3"></div>
+                <div id="tableau-4" class="pile tableau-pile" data-pile="tableau" data-index="4"></div>
+                <div id="tableau-5" class="pile tableau-pile" data-pile="tableau" data-index="5"></div>
+                <div id="tableau-6" class="pile tableau-pile" data-pile="tableau" data-index="6"></div>
+            </div>
+        </main>
+
+        <footer class="game-footer">
+            <button id="btn-new-game-play" class="btn btn-small">Novo Jogo</button>
+            <button id="btn-hint" class="btn btn-small">💡 Dica</button>
+            <button id="btn-auto-complete" class="btn btn-small" disabled>🏁 Auto-completar</button>
+        </footer>
+    </div>
+
+    <!-- Pause Modal -->
+    <div id="pause-modal" class="modal">
+        <div class="modal-content">
+            <h2>⏸️ Jogo Pausado</h2>
+            <div class="modal-buttons">
+                <button id="btn-resume" class="btn btn-primary">Continuar</button>
+                <button id="btn-quit" class="btn btn-secondary">Sair</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Victory Modal -->
+    <div id="victory-modal" class="modal">
+        <div class="modal-content victory">
+            <h2>🎉 Parabéns!</h2>
+            <p class="victory-message">Você completou o jogo!</p>
+            <div class="victory-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Tempo</span>
+                    <span id="final-time" class="stat-value">--:--</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Pontuação</span>
+                    <span id="final-score" class="stat-value">---</span>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button id="btn-play-again" class="btn btn-primary">Jogar Novamente</button>
+                <button id="btn-menu" class="btn btn-secondary">Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="src/main.js"></script>
+</body>
+</html>

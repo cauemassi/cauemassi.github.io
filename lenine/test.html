@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Lenine</title>
+</head>
+<body>
+    <h1>Teste de Módulos</h1>
+    <div id="output"></div>
+    
+    <script type="module">
+        import { Card } from './src/cards/Card.js';
+        import { Deck } from './src/cards/Deck.js';
+        import { GameController } from './src/core/GameController.js';
+        
+        const output = document.getElementById('output');
+        
+        try {
+            // Test Card
+            const card = new Card(Card.SUITS.HEARTS, 'A');
+            output.innerHTML += `<p>✓ Card criado: ${card.toString()}</p>`;
+            
+            // Test Deck
+            const deck = new Deck();
+            deck.shuffle();
+            output.innerHTML += `<p>✓ Deck criado com ${deck.remaining} cartas</p>`;
+            
+            // Test GameController
+            const game = new GameController();
+            game.initialize();
+            output.innerHTML += `<p>✓ GameController inicializado</p>`;
+            
+            output.innerHTML += `<p style="color: green; font-weight: bold;">✓ Todos os testes passaram!</p>`;
+        } catch (error) {
+            output.innerHTML += `<p style="color: red;">✗ Erro: ${error.message}</p>`;
+            console.error(error);
+        }
+    </script>
+</body>
+</html>
