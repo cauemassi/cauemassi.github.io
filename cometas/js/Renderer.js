@@ -64,7 +64,7 @@ class Renderer {
     /**
      * Renderiza todas as entidades do jogo
      */
-    render(ship, asteroids, projectiles, powerUps, particleSystem) {
+    render(ship, asteroids, projectiles, powerUps, healthPacks, particleSystem) {
         this.clear();
         
         // Desenha partículas (atrás de tudo)
@@ -81,6 +81,13 @@ class Renderer {
         powerUps.forEach(powerUp => {
             if (powerUp.alive) {
                 powerUp.draw(this.ctx);
+            }
+        });
+        
+        // Desenha health packs
+        healthPacks.forEach(healthPack => {
+            if (healthPack.alive) {
+                healthPack.draw(this.ctx);
             }
         });
         

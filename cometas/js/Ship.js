@@ -201,6 +201,13 @@ class Ship extends Entity {
     getHealthPercentage() {
         return this.health / this.maxHealth;
     }
+    
+    /**
+     * Cura a nave
+     */
+    heal(amount) {
+        this.health = Math.min(this.maxHealth, this.health + amount);
+    }
 
     /**
      * Desenha a nave

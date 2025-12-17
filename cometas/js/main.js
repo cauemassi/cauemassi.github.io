@@ -35,6 +35,9 @@ function initializeUI() {
     // Botão "Voltar ao Menu" na tela de game over
     document.getElementById('menu-button').addEventListener('click', backToMenu);
     
+    // Botão "Jogar Novamente" na tela de game over
+    document.getElementById('restart-button').addEventListener('click', restartGame);
+    
     // Botões da tela de opções
     document.getElementById('back-to-menu').addEventListener('click', backToMenuFromOptions);
     document.getElementById('volume-up').addEventListener('click', volumeUp);
@@ -260,6 +263,23 @@ function backToMenu() {
         screen.classList.remove('active');
     });
     document.getElementById('menu-screen').classList.add('active');
+}
+
+/**
+ * Reinicia o jogo
+ */
+function restartGame() {
+    // Esconde game over, mostra jogo
+    document.getElementById('gameover-screen').classList.remove('active');
+    document.getElementById('game-screen').classList.add('active');
+
+    
+    // Cria nova instância do jogo
+    if (game) {
+        game.stop();
+    }
+    game = new Game();
+    game.start();
 }
 
 /**

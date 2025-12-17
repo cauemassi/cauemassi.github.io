@@ -18,6 +18,7 @@ class Game {
         this.asteroids = [];
         this.projectiles = [];
         this.powerUps = [];
+        this.healthPacks = [];
         
         // Game loop
         this.lastTime = 0;
@@ -32,6 +33,10 @@ class Game {
         // Sistema de power-ups
         this.powerUpSpawnTimer = 0;
         this.powerUpSpawnInterval = 20;  // A cada 20 segundos
+        
+        // Sistema de health packs
+        this.healthPackSpawnTimer = 0;
+        this.healthPackSpawnInterval = 15;  // A cada 15 segundos
         
         // Controle de pausa
         this.pausePressed = false;
@@ -69,10 +74,8 @@ class Game {
         
         if (!this.ship || !this.ship.alive) {
             this.ship = new Ship(centerX, centerY);
-        } else {
-            // Restaura vida para nova fase
-            this.ship.health = this.ship.maxHealth;
-        }
+        } 
+        // Não restaura vida ao passar de fase
         
         // Limpa arrays
         this.asteroids = [];
@@ -158,6 +161,13 @@ class Game {
             this.powerUps.push(PowerUp.createOnScreen(width, height));
         }
         
+        // Spawna health packs periodicamente
+        this.healthPackSpawnTimer += deltaTime;
+        if (this.healthPackSpawnTimer >= this.healthPackSpawnInterval) {
+            this.healthPackSpawnTimer = 0;
+            this.healthPacks.push(HealthPack.createOnScreen(width, height));
+        }
+        
         // Atualiza nave
         if (this.ship.alive) {
             this.ship.update(deltaTime, width, height, this.inputManager);
@@ -197,6 +207,11 @@ class Game {
             powerUp.update(deltaTime, width, height);
         });
         
+        // Atualiza health packs
+        this.healthPacks.forEach(healthPack => {
+            healthPack.update(deltaTime, width, height);
+        });
+        
         // Atualiza partículas
         this.particleSystem.update(deltaTime);
         
@@ -207,6 +222,7 @@ class Game {
         this.asteroids = CollisionSystem.removeDeadEntities(this.asteroids);
         this.projectiles = CollisionSystem.removeDeadEntities(this.projectiles);
         this.powerUps = CollisionSystem.removeDeadEntities(this.powerUps);
+        this.healthPacks = CollisionSystem.removeDeadEntities(this.healthPacks);
         
         // Verifica condições de vitória/derrota
         this.checkGameConditions();
@@ -260,6 +276,16 @@ class Game {
                 this.particleSystem.createExplosion(powerUp.x, powerUp.y, 10);
             }
         });
+        
+        // Nave vs Health Packs
+        this.healthPacks.forEach(healthPack => {
+            if (healthPack.alive && this.ship.alive && this.ship.collidesWith(healthPack)) {
+                // Restaura vida
+                this.ship.heal(healthPack.healAmount);
+                healthPack.destroy();
+                this.particleSystem.createExplosion(healthPack.x, healthPack.y, 10);
+            }
+        });
     }
 
     /**
@@ -289,6 +315,7 @@ class Game {
             this.asteroids,
             this.projectiles,
             this.powerUps,
+            this.healthPacks,
             this.particleSystem
         );
     }

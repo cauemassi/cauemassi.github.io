@@ -21,24 +21,64 @@ class CollisionSystem {
                 if (!asteroid.alive) return;
 
                 if (projectile.collidesWith(asteroid)) {
-                    // Marca ambos para destruição
-                    projectile.destroy();
-                    asteroid.destroy();
+                    // Verifica se é super projétil
+                    const isSuperShot = projectile instanceof SuperProjectile;
                     
-                    // Adiciona à lista de destruídos
-                    if (!destroyedAsteroids.includes(asteroid)) {
-                        destroyedAsteroids.push(asteroid);
-                        scoreGained += asteroid.points;
+                    if (isSuperShot) {
+                        // Super tiro NÃO é destruído (atravessa)
+                        asteroid.destroy();
                         
-                        // Quebra o asteroide se não for pequeno
-                        const fragments = asteroid.break();
-                        newFragments.push(...fragments);
+                        // Lógica especial do super tiro
+                        if (!destroyedAsteroids.includes(asteroid)) {
+                            destroyedAsteroids.push(asteroid);
+                            scoreGained += asteroid.points;
+                            
+                            // Grande -> 2 pequenos, Médio -> desaparece, Pequeno -> destruído
+                            if (asteroid.size === Asteroid.SIZE_LARGE) {
+                                // Cria 2 pequenos diretamente
+                                const fragments = this.createSmallFragments(asteroid, 2);
+                                newFragments.push(...fragments);
+                            }
+                            // Médio e pequeno simplesmente desaparecem (sem fragmentos)
+                        }
+                    } else {
+                        // Projétil normal
+                        projectile.destroy();
+                        asteroid.destroy();
+                        
+                        if (!destroyedAsteroids.includes(asteroid)) {
+                            destroyedAsteroids.push(asteroid);
+                            scoreGained += asteroid.points;
+                            
+                            // Quebra normalmente
+                            const fragments = asteroid.break();
+                            newFragments.push(...fragments);
+                        }
                     }
                 }
             });
         });
 
         return { destroyedAsteroids, newFragments, scoreGained };
+    }
+    
+    /**
+     * Cria fragmentos pequenos a partir de um asteroide
+     */
+    static createSmallFragments(asteroid, count) {
+        const fragments = [];
+        for (let i = 0; i < count; i++) {
+            const angle = (Math.PI * 2 * i) / count + Utils.random(-0.5, 0.5);
+            const speed = asteroid.speed * 1.2;
+            fragments.push(new Asteroid(
+                asteroid.x,
+                asteroid.y,
+                Asteroid.SIZE_SMALL,
+                angle,
+                speed
+            ));
+        }
+        return fragments;
     }
 
     /**
