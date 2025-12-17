@@ -41,17 +41,25 @@ export class Renderer {
 
         // Render cards
         pile.cards.forEach((card, index) => {
-            const cardElement = card.element || card.createElement();
+            // Get or create card element
+            let cardElement = card.element;
+            if (!cardElement) {
+                cardElement = card.createElement();
+            } else {
+                // Update existing element content to match current card state
+                card.updateElement();
+            }
             
-            // Reset ALL styles that might have been set during drag
+            // Reset ALL inline styles completely
+            cardElement.removeAttribute('style');
+            
+            // Reset classes
             cardElement.classList.remove('dragging', 'selected');
+            
+            // Apply base positioning
             cardElement.style.position = 'absolute';
             cardElement.style.left = '0';
-            cardElement.style.top = '';
-            cardElement.style.transform = '';
-            cardElement.style.pointerEvents = '';
-            cardElement.style.zIndex = '';
-            cardElement.style.cursor = '';
+            cardElement.style.pointerEvents = 'auto';
             
             // Position card based on pile type
             if (pile.type === 'tableau') {

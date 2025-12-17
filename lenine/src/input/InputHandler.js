@@ -39,9 +39,10 @@ export class InputHandler {
         // Double click/tap for auto-move
         gameBoard.addEventListener('dblclick', this.handleDoubleClick.bind(this));
         
-        // Stock click
+        // Stock click and touch
         const stockElement = document.getElementById('stock');
         stockElement.addEventListener('click', this.handleStockClick.bind(this));
+        stockElement.addEventListener('touchend', this.handleStockTouch.bind(this));
     }
 
     handleMouseDown(e) {
@@ -112,6 +113,14 @@ export class InputHandler {
         if (!this.game.canInteract()) return;
         
         const touch = e.touches[0];
+        
+        // Check if touching stock pile directly (not a card)
+        const pileElement = touch.target.closest('.pile');
+        if (pileElement && pileElement.id === 'stock') {
+            // Touching stock itself, not for dragging
+            return;
+        }
+        
         const cardElement = touch.target.closest('.card');
         
         if (!cardElement) return;
@@ -120,6 +129,9 @@ export class InputHandler {
         
         const card = this.game.getCardFromElement(cardElement);
         const pile = this.game.getPileFromElement(cardElement.parentElement);
+        
+        // Don't allow dragging from stock
+        if (pile && pile.id === 'stock') return;
         
         if (!card || !pile || !card.faceUp || !pile.canPickCard(card)) return;
         
@@ -329,7 +341,30 @@ export class InputHandler {
 
     handleStockClick(e) {
         if (!this.game.canInteract()) return;
-        this.game.drawFromStock();
+        
+        // Evitar que o clique no stock inicie um drag
+        const clickedElement = e.target.closest('.pile');
+        if (clickedElement && clickedElement.id === 'stock') {
+            e.preventDefault();
+            e.stopPropagation();
+            this.game.drawFromStock();
+        }
+    }
+
+    handleStockTouch(e) {
+        if (!this.game.canInteract()) return;
+        
+        // Prevenir que toque no stock seja tratado como drag
+        const touchedElement = e.target.closest('.pile');
+        if (touchedElement && touchedElement.id === 'stock') {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Se não estava arrastando, compra carta
+            if (!this.isDragging && !this.draggedCard) {
+                this.game.drawFromStock();
+            }
+        }
     }
 
     clearSelection() {
