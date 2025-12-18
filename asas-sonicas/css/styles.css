@@ -1,0 +1,113 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: #000;
+    font-family: 'Courier New', monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#gameContainer {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    max-width: 480px;
+    max-height: 720px;
+    background: #000;
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+}
+
+#gameCanvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+#mobileControls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 200px;
+    display: none;
+    pointer-events: none;
+}
+
+#mobileControls.active {
+    display: block;
+    pointer-events: all;
+}
+
+.control-btn {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    cursor: pointer;
+    touch-action: none;
+    transition: all 0.1s;
+}
+
+.control-btn:active {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.6);
+    transform: scale(0.95);
+}
+
+#dpad {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    width: 140px;
+    height: 140px;
+}
+
+.dpad-btn {
+    position: absolute;
+    width: 45px;
+    height: 45px;
+    background: rgba(100, 150, 255, 0.2);
+    border: 2px solid rgba(100, 150, 255, 0.5);
+    border-radius: 8px;
+}
+
+#btnUp { top: 0; left: 50%; transform: translateX(-50%); }
+#btnDown { bottom: 0; left: 50%; transform: translateX(-50%); }
+#btnLeft { left: 0; top: 50%; transform: translateY(-50%); }
+#btnRight { right: 0; top: 50%; transform: translateY(-50%); }
+
+#btnShoot {
+    bottom: 20px;
+    right: 20px;
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 50, 50, 0.2);
+    border: 3px solid rgba(255, 50, 50, 0.5);
+    border-radius: 50%;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+    #gameContainer {
+        max-width: 50vh;
+        max-height: 100vh;
+    }
+}
