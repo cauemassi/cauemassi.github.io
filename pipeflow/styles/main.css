@@ -175,10 +175,11 @@ body {
     height: calc(var(--vh, 1vh) * 100);
     display: flex;
     flex-direction: column;
-    padding: 5px;
+    padding: 5px 5px 0 5px;
     gap: 5px;
     overflow: hidden;
     box-sizing: border-box;
+    padding-bottom: calc(var(--vh, 1vh) * 10);
 }
 
 /* HUD */
@@ -388,6 +389,7 @@ body {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     position: relative;
     flex-shrink: 0;
+    margin-bottom: calc(var(--vh, 1vh) * 10);
 }
 
 .controller-left,
@@ -513,8 +515,13 @@ body {
 /* Responsive */
 @media (max-height: 750px), (max-width: 768px) {
     .game-container {
-        padding: 2px;
+        padding: 2px 2px 0 2px;
         gap: 2px;
+        padding-bottom: calc(var(--vh, 1vh) * 12);
+    }
+    
+    .controller {
+        margin-bottom: calc(var(--vh, 1vh) * 12);
     }
     
     .hud-top, .hud-bottom {
@@ -603,8 +610,13 @@ body {
 
 @media (max-height: 650px) {
     .game-container {
-        padding: 1px;
+        padding: 1px 1px 0 1px;
         gap: 1px;
+        padding-bottom: calc(var(--vh, 1vh) * 15);
+    }
+    
+    .controller {
+        margin-bottom: calc(var(--vh, 1vh) * 15);
     }
     
     .hud-top, .hud-bottom {
