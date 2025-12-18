@@ -124,9 +124,18 @@ body {
 .form-group label {
     font-weight: 600;
     font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
-.form-group input,
+.form-group input[type="checkbox"] {
+    width: auto;
+    cursor: pointer;
+}
+
+.form-group input[type="password"],
+.form-group input[type="text"],
 .form-group select {
     padding: 0.75rem;
     border: none;
@@ -274,6 +283,27 @@ body {
     50% { box-shadow: inset 0 0 30px rgba(255, 214, 10, 0.8); }
 }
 
+/* Piece jump animation */
+@keyframes pieceJump {
+    0% { 
+        transform: translate(0, 0) scale(1);
+        z-index: 1;
+    }
+    50% { 
+        transform: translate(var(--jump-x), var(--jump-y)) scale(1.2);
+        z-index: 100;
+    }
+    100% { 
+        transform: translate(var(--final-x), var(--final-y)) scale(1);
+        z-index: 1;
+    }
+}
+
+.piece.jumping {
+    animation: pieceJump 0.6s cubic-bezier(0.45, 0, 0.55, 1);
+    position: relative;
+}
+
 .cell.valid-move {
     background: rgba(6, 255, 165, 0.3) !important;
 }
@@ -370,16 +400,41 @@ body {
     flex: 1;
     font-style: italic;
     opacity: 0.9;
-    animation: fadeIn 0.5s ease-in;
+}
+
+.dialogue-bubble.blink {
+    animation: blinkAttention 1s ease-in-out;
+}
+
+@keyframes blinkAttention {
+    0%, 100% { 
+        opacity: 0.9;
+        transform: scale(1);
+    }
+    25% { 
+        opacity: 0.3;
+        transform: scale(0.98);
+    }
+    50% { 
+        opacity: 1;
+        transform: scale(1.02);
+        color: var(--success);
+    }
+    75% { 
+        opacity: 0.3;
+        transform: scale(0.98);
+    }
 }
 
 .game-actions {
     display: flex;
     gap: 1rem;
+    justify-content: center;
 }
 
 .game-actions .btn {
     flex: 1;
+    max-width: 200px;
 }
 
 /* Game Over Screen */

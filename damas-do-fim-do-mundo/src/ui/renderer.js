@@ -94,7 +94,7 @@ export class Renderer {
         return this.boardElement.querySelector(`[data-row="${row}"][data-col="${col}"]`);
     }
 
-    animateMove(from, to, callback) {
+    animateMove(from, to, captures, callback) {
         const fromCell = this.getCellElement(from.row, from.col);
         const toCell = this.getCellElement(to.row, to.col);
         
@@ -104,14 +104,62 @@ export class Renderer {
         }
 
         const piece = fromCell.querySelector('.piece');
-        if (piece) {
-            // Simple animation - just move quickly
-            setTimeout(() => {
-                callback();
-            }, 200);
-        } else {
+        if (!piece) {
             callback();
+            return;
         }
+
+        // Calculate positions for animation
+        const fromRect = fromCell.getBoundingClientRect();
+        const toRect = toCell.getBoundingClientRect();
+        
+        const deltaX = toRect.left - fromRect.left;
+        const deltaY = toRect.top - fromRect.top;
+
+        // If there are captures, animate "jumping" over them
+        if (captures && captures.length > 0) {
+            this.animateJumpSequence(piece, from, to, captures, deltaX, deltaY, callback);
+        } else {
+            // Simple slide animation
+            this.animateSlide(piece, deltaX, deltaY, callback);
+        }
+    }
+
+    animateSlide(piece, deltaX, deltaY, callback) {
+        piece.style.setProperty('--final-x', `${deltaX}px`);
+        piece.style.setProperty('--final-y', `${deltaY}px`);
+        piece.style.setProperty('--jump-x', `${deltaX * 0.5}px`);
+        piece.style.setProperty('--jump-y', `${deltaY * 0.5 - 30}px`);
+        
+        piece.classList.add('jumping');
+        
+        setTimeout(() => {
+            piece.classList.remove('jumping');
+            piece.style.removeProperty('--final-x');
+            piece.style.removeProperty('--final-y');
+            piece.style.removeProperty('--jump-x');
+            piece.style.removeProperty('--jump-y');
+            callback();
+        }, 600);
+    }
+
+    animateJumpSequence(piece, from, to, captures, deltaX, deltaY, callback) {
+        // For captures, make the piece "jump" higher
+        piece.style.setProperty('--final-x', `${deltaX}px`);
+        piece.style.setProperty('--final-y', `${deltaY}px`);
+        piece.style.setProperty('--jump-x', `${deltaX * 0.5}px`);
+        piece.style.setProperty('--jump-y', `${deltaY * 0.5 - 50}px`); // Higher jump
+        
+        piece.classList.add('jumping');
+        
+        setTimeout(() => {
+            piece.classList.remove('jumping');
+            piece.style.removeProperty('--final-x');
+            piece.style.removeProperty('--final-y');
+            piece.style.removeProperty('--jump-x');
+            piece.style.removeProperty('--jump-y');
+            callback();
+        }, 600);
     }
 
     updateTurnIndicator(currentPlayer) {
@@ -137,6 +185,20 @@ export class Renderer {
         const messageElement = document.getElementById('ai-message');
         if (messageElement) {
             messageElement.textContent = message;
+            
+            // Remove animation class if exists
+            messageElement.classList.remove('blink');
+            
+            // Trigger reflow to restart animation
+            void messageElement.offsetWidth;
+            
+            // Add blink animation
+            messageElement.classList.add('blink');
+            
+            // Remove class after animation completes
+            setTimeout(() => {
+                messageElement.classList.remove('blink');
+            }, 1000);
         }
     }
 

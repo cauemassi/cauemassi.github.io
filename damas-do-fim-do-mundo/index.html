@@ -28,6 +28,14 @@
 
                 <div class="menu-form">
                     <div class="form-group">
+                        <label for="use-ai">
+                            <input type="checkbox" id="use-ai" checked>
+                            Usar ChatGPT (IA inteligente)
+                        </label>
+                        <small>Se desmarcado, IA fará jogadas aleatórias (não precisa API Key)</small>
+                    </div>
+
+                    <div class="form-group" id="api-key-group">
                         <label for="api-key">API Key OpenAI</label>
                         <input type="password" id="api-key" placeholder="sk-...">
                         <small>Sua chave é salva localmente</small>
@@ -70,6 +78,13 @@
                     <button id="menu-btn" class="btn btn-small">Menu</button>
                 </div>
 
+                <div class="ai-dialogue">
+                    <div class="ai-avatar">🤖</div>
+                    <div class="dialogue-bubble" id="ai-message">
+                        Prepare-se para perder...
+                    </div>
+                </div>
+
                 <div id="help-message" class="help-message">
                     💡 Clique em uma peça branca, depois clique no quadrado destacado para mover
                 </div>
@@ -77,12 +92,6 @@
                 <div id="board" class="board"></div>
 
                 <div class="game-footer">
-                    <div class="ai-dialogue">
-                        <div class="ai-avatar">🤖</div>
-                        <div class="dialogue-bubble" id="ai-message">
-                            Prepare-se para perder...
-                        </div>
-                    </div>
                     <div class="game-actions">
                         <button id="surrender-btn" class="btn btn-secondary">Desistir</button>
                         <button id="restart-btn" class="btn btn-secondary">Reiniciar</button>

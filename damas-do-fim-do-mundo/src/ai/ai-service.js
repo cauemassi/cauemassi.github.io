@@ -6,9 +6,11 @@ export class AIService {
         this.apiUrl = 'https://api.openai.com/v1/chat/completions';
     }
 
-    async getMove(board, difficulty, validMoves) {
-        if (!this.apiKey) {
-            throw new Error('API Key não configurada');
+    async getMove(board, difficulty, validMoves, useAI = true) {
+        // Se não deve usar IA ou não tem API Key, retorna movimento aleatório
+        if (!useAI || !this.apiKey) {
+            console.log('[AI] Modo offline: Escolhendo movimento aleatório');
+            return this.getRandomMove(validMoves);
         }
 
         const prompt = this.buildPrompt(board, difficulty, validMoves);

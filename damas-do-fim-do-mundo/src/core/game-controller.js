@@ -137,28 +137,32 @@ export class GameController {
             return;
         }
 
-        this.executeMove(move);
+        this.executeMove(move, true); // Animate player moves too
         this.selectedPiece = null;
         this.validMovesForSelected = [];
         
-        // Check game over
-        const gameOverResult = this.rulesEngine.checkGameOver();
-        if (gameOverResult.isOver) {
-            this.endGame(gameOverResult.winner);
-            return;
-        }
+        // Wait for animation before continuing
+        setTimeout(() => {
+            // Check game over
+            const gameOverResult = this.rulesEngine.checkGameOver();
+            if (gameOverResult.isOver) {
+                this.endGame(gameOverResult.winner);
+                return;
+            }
 
-        // Switch to AI turn
-        this.currentPlayer = PLAYER.AI;
-        this.stateManager.setState(STATES.AI_TURN);
-        this.executeAITurn();
+            // Switch to AI turn
+            this.currentPlayer = PLAYER.AI;
+            this.stateManager.setState(STATES.AI_TURN);
+            this.executeAITurn();
+        }, 650);
     }
 
-    executeMove(move) {
+    executeMove(move, animate = true) {
         console.log('=== EXECUTANDO MOVIMENTO ===');
         console.log('De:', this.positionToNotation(move.from.row, move.from.col));
         console.log('Para:', this.positionToNotation(move.to.row, move.to.col));
         console.log('Capturas:', move.captures.length);
+        console.log('Animar:', animate);
         
         if (move.captures.length > 0) {
             console.log('Peças capturadas:');
@@ -167,13 +171,29 @@ export class GameController {
             });
         }
         
-        try {
-            this.rulesEngine.executeMove(move);
-            this.renderer.renderBoard(this.board);
-        } catch (error) {
-            console.error('ERRO ao executar movimento:', error);
-            alert('Erro ao executar movimento. Verifique o console (F12) para mais detalhes.');
-            throw error;
+        if (animate) {
+            // Animate the move first
+            this.renderer.animateMove(move.from, move.to, move.captures, () => {
+                // Then execute the actual move
+                try {
+                    this.rulesEngine.executeMove(move);
+                    this.renderer.renderBoard(this.board);
+                } catch (error) {
+                    console.error('ERRO ao executar movimento:', error);
+                    alert('Erro ao executar movimento. Verifique o console (F12) para mais detalhes.');
+                    throw error;
+                }
+            });
+        } else {
+            // No animation, execute immediately
+            try {
+                this.rulesEngine.executeMove(move);
+                this.renderer.renderBoard(this.board);
+            } catch (error) {
+                console.error('ERRO ao executar movimento:', error);
+                alert('Erro ao executar movimento. Verifique o console (F12) para mais detalhes.');
+                throw error;
+            }
         }
     }
 
@@ -194,7 +214,8 @@ export class GameController {
             const move = await this.aiService.getMove(
                 this.board, 
                 this.config.difficulty, 
-                validMoves
+                validMoves,
+                this.config.useAI !== false // Pass useAI flag
             );
 
             this.renderer.showLoading(false);
@@ -204,9 +225,13 @@ export class GameController {
                 return;
             }
 
-            this.executeMove(move);
+            // Execute move with animation
+            this.executeMove(move, true);
             
-            // Show AI dialogue
+            // Wait for animation to complete before showing dialogue
+            await this.delay(650);
+            
+            // Show AI dialogue with blink effect
             const dialogue = this.dialogueManager.getDialogueForMove(move, {
                 playerPieceCount: this.rulesEngine.getPieceCount(PLAYER.HUMAN),
                 aiPieceCount: this.rulesEngine.getPieceCount(PLAYER.AI)

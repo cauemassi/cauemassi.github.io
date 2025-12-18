@@ -19,6 +19,15 @@ export class InputHandler {
             startButton.addEventListener('click', () => this.handleStartGame());
         }
 
+        // Toggle API Key visibility based on checkbox
+        const useAICheckbox = document.getElementById('use-ai');
+        const apiKeyGroup = document.getElementById('api-key-group');
+        if (useAICheckbox && apiKeyGroup) {
+            useAICheckbox.addEventListener('change', (e) => {
+                apiKeyGroup.style.display = e.target.checked ? 'flex' : 'none';
+            });
+        }
+
         // Game buttons
         const menuButton = document.getElementById('menu-btn');
         if (menuButton) {
@@ -58,20 +67,22 @@ export class InputHandler {
     }
 
     handleStartGame() {
+        const useAI = document.getElementById('use-ai').checked;
         const apiKey = document.getElementById('api-key').value.trim();
         const difficulty = document.getElementById('difficulty').value;
         const firstPlayer = document.getElementById('first-player').value;
 
-        // API Key é opcional - se não tiver, IA faz jogadas aleatórias
-        if (!apiKey) {
+        // Se usar IA mas não tem API Key, avisar
+        if (useAI && !apiKey) {
             const confirmed = confirm('Sem API Key, a IA fará movimentos aleatórios. Continuar?');
             if (!confirmed) return;
         }
 
         this.gameController.startGame({
-            apiKey,
+            apiKey: useAI ? apiKey : '', // Se não usar IA, passa string vazia
             difficulty,
-            firstPlayer
+            firstPlayer,
+            useAI // Nova flag
         });
     }
 
