@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Pipe Flow</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Menu Screen -->
+        <div id="menu-screen" class="screen active">
+            <div class="menu-container">
+                <img src="images/image.png" alt="Pipe Flow" class="logo">
+                <h1>Pipe Flow</h1>
+                <div class="menu-buttons">
+                    <button id="btn-start" class="btn-primary">Iniciar Jogo</button>
+                    <button id="btn-difficulty" class="btn-secondary">Dificuldade: <span id="current-difficulty">Médio</span></button>
+                    <button id="btn-levels" class="btn-secondary">Selecionar Fase</button>
+                </div>
+                <div class="credits">Feito por Caue Massi</div>
+                <div class="credits">Homengem ao Fih</div>
+            </div>
+        </div>
+
+        <!-- Level Select Screen -->
+        <div id="level-select-screen" class="screen">
+            <div class="level-select-container">
+                <h2>Selecionar Fase</h2>
+                <div id="levels-grid" class="levels-grid"></div>
+                <button id="btn-back-menu" class="btn-secondary">Voltar</button>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="game-screen" class="screen">
+            <div class="game-container">
+                <!-- HUD Superior -->
+                <div class="hud-top">
+                    <div class="hud-item">
+                        <span class="hud-label">Fase</span>
+                        <span id="hud-level" class="hud-value">1</span>
+                    </div>
+                    <div class="hud-item">
+                        <span class="hud-label">Pontos</span>
+                        <span id="hud-score" class="hud-value">0</span>
+                    </div>
+                    <div class="hud-item">
+                        <span class="hud-label">Tempo</span>
+                        <span id="hud-time" class="hud-value">60</span>
+                    </div>
+                </div>
+
+                <!-- Grid -->
+                <div id="game-grid" class="game-grid"></div>
+
+                <!-- HUD Inferior -->
+                <div class="hud-bottom">
+                    <div class="pipe-queue-container">
+                        <div class="current-pipe-container">
+                            <div class="pipe-label">Atual</div>
+                            <div id="current-pipe" class="pipe-preview"></div>
+                        </div>
+                        <div class="next-pipes-container">
+                            <div class="pipe-label">Próximas</div>
+                            <div class="next-pipes">
+                                <div id="next-pipe-1" class="pipe-preview small"></div>
+                                <div id="next-pipe-2" class="pipe-preview small"></div>
+                                <div id="next-pipe-3" class="pipe-preview small"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="btn-speed" class="btn-speed">⚡ Acelerar</button>
+                </div>
+
+                <!-- SNES Controller -->
+                <div class="controller">
+                    <div class="controller-left">
+                        <div class="dpad">
+                            <button class="dpad-btn dpad-up" data-direction="up">▲</button>
+                            <button class="dpad-btn dpad-left" data-direction="left">◄</button>
+                            <button class="dpad-btn dpad-center"></button>
+                            <button class="dpad-btn dpad-right" data-direction="right">►</button>
+                            <button class="dpad-btn dpad-down" data-direction="down">▼</button>
+                        </div>
+                    </div>
+                    <div class="controller-right">
+                        <button class="action-btn btn-b" data-action="rotate">B</button>
+                        <button class="action-btn btn-a" data-action="place">A</button>
+                    </div>
+                    <button class="btn-pause" data-action="pause">PAUSE</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="result-screen" class="screen">
+            <div class="result-container">
+                <h2 id="result-title">Vitória!</h2>
+                <div class="result-stats">
+                    <p>Fase: <span id="result-level">1</span></p>
+                    <p>Pontuação: <span id="result-score">0</span></p>
+                    <p>Recorde: <span id="result-record">0</span></p>
+                </div>
+                <div class="result-buttons">
+                    <button id="btn-next-level" class="btn-primary">Próxima Fase</button>
+                    <button id="btn-retry" class="btn-secondary">Tentar Novamente</button>
+                    <button id="btn-menu" class="btn-secondary">Menu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="src/main.js"></script>
+</body>
+</html>
