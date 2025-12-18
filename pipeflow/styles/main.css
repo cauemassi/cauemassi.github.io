@@ -6,21 +6,33 @@
     -webkit-tap-highlight-color: transparent;
 }
 
+html {
+    height: 100%;
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+}
+
 body {
     font-family: 'Arial', sans-serif;
     background: #1a1a2e;
     color: #fff;
     overflow: hidden;
     height: 100vh;
-    height: 100dvh;
+    height: calc(var(--vh, 1vh) * 100);
     touch-action: none;
-    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    margin: 0;
+    padding: 0;
+    position: fixed;
+    width: 100%;
 }
 
 #app {
     width: 100%;
     height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
     position: relative;
+    overflow: hidden;
 }
 
 /* Screen Management */
@@ -160,12 +172,13 @@ body {
 .game-container {
     width: 100%;
     height: 100vh;
-    height: 100dvh;
+    height: calc(var(--vh, 1vh) * 100);
     display: flex;
     flex-direction: column;
     padding: 5px;
     gap: 5px;
     overflow: hidden;
+    box-sizing: border-box;
 }
 
 /* HUD */
@@ -498,6 +511,162 @@ body {
 }
 
 /* Responsive */
+@media (max-height: 750px), (max-width: 768px) {
+    .game-container {
+        padding: 2px;
+        gap: 2px;
+    }
+    
+    .hud-top, .hud-bottom {
+        padding: 4px;
+        border-radius: 6px;
+    }
+    
+    .hud-label {
+        font-size: 0.65em;
+    }
+    
+    .hud-value {
+        font-size: 1.1em;
+    }
+    
+    .game-grid {
+        gap: 1px;
+        padding: 3px;
+        border-radius: 6px;
+    }
+    
+    .pipe-preview {
+        width: 42px;
+        height: 42px;
+    }
+    
+    .pipe-preview.small {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .pipe-label {
+        font-size: 0.65em;
+    }
+    
+    .btn-speed {
+        padding: 5px 10px;
+        font-size: 0.75em;
+    }
+    
+    .controller {
+        padding: 4px 8px;
+        border-radius: 8px;
+    }
+    
+    .dpad {
+        grid-template-columns: repeat(3, 30px);
+        grid-template-rows: repeat(3, 30px);
+        gap: 1px;
+    }
+    
+    .dpad-btn {
+        font-size: 1em;
+    }
+    
+    .controller-right {
+        width: 85px;
+        height: 85px;
+    }
+    
+    .action-btn {
+        width: 38px;
+        height: 38px;
+        font-size: 0.8em;
+        border: 2px solid #3d2f4d;
+    }
+    
+    .btn-b {
+        right: 45px;
+    }
+    
+    .btn-pause {
+        padding: 3px 10px;
+        font-size: 0.65em;
+        top: 3px;
+    }
+    
+    .pipe-queue-container {
+        gap: 8px;
+    }
+    
+    .next-pipes {
+        gap: 3px;
+    }
+}
+
+@media (max-height: 650px) {
+    .game-container {
+        padding: 1px;
+        gap: 1px;
+    }
+    
+    .hud-top, .hud-bottom {
+        padding: 3px;
+    }
+    
+    .hud-label {
+        font-size: 0.6em;
+    }
+    
+    .hud-value {
+        font-size: 1em;
+    }
+    
+    .game-grid {
+        padding: 2px;
+    }
+    
+    .pipe-preview {
+        width: 38px;
+        height: 38px;
+    }
+    
+    .pipe-preview.small {
+        width: 25px;
+        height: 25px;
+    }
+    
+    .controller {
+        padding: 3px 6px;
+    }
+    
+    .dpad {
+        grid-template-columns: repeat(3, 28px);
+        grid-template-rows: repeat(3, 28px);
+    }
+    
+    .dpad-btn {
+        font-size: 0.9em;
+    }
+    
+    .controller-right {
+        width: 75px;
+        height: 75px;
+    }
+    
+    .action-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 0.75em;
+    }
+    
+    .btn-b {
+        right: 40px;
+    }
+    
+    .btn-speed {
+        padding: 4px 8px;
+        font-size: 0.7em;
+    }
+}
+
 @media (max-height: 700px) {
     .game-container {
         padding: 2px;
