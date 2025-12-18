@@ -26,7 +26,7 @@ export class TableauPile extends Pile {
 
         const targetCard = this.getTopCard();
         
-        // Must be face up
+        // Must be face up (carta do topo deve estar virada)
         if (!targetCard.faceUp) {
             return false;
         }

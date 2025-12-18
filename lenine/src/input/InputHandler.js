@@ -272,8 +272,14 @@ export class InputHandler {
     handleDrop(x, y) {
         // Usar o drop target atual se existir (magnético)
         if (this.currentDropTarget) {
+            // Se soltar na mesma pilha de origem, NÃO fazer nada
+            if (this.currentDropTarget === this.sourcePile) {
+                // Re-renderizar apenas a pilha de origem para restaurar posições
+                this.game.renderer.renderPile(this.sourcePile);
+                return false; // Indica que não houve movimento
+            }
             this.game.tryMoveCard(this.draggedCard, this.sourcePile, this.currentDropTarget);
-            return;
+            return true;
         }
         
         // Fallback: buscar elemento no ponto de drop com raio expandido
@@ -300,9 +306,22 @@ export class InputHandler {
         if (closestPile) {
             const targetPile = this.game.getPileFromElement(closestPile);
             if (targetPile) {
+                // Se soltar na mesma pilha de origem, NÃO fazer nada
+                if (targetPile === this.sourcePile) {
+                    // Re-renderizar apenas a pilha de origem para restaurar posições
+                    this.game.renderer.renderPile(this.sourcePile);
+                    return false; // Indica que não houve movimento
+                }
                 this.game.tryMoveCard(this.draggedCard, this.sourcePile, targetPile);
+                return true;
             }
         }
+        
+        // Nenhuma pilha encontrada - re-renderizar a pilha de origem
+        if (this.sourcePile) {
+            this.game.renderer.renderPile(this.sourcePile);
+        }
+        return false;
     }
 
     handleCardClick(card, pile) {
