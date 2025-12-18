@@ -12,7 +12,9 @@ body {
     color: #fff;
     overflow: hidden;
     height: 100vh;
+    height: 100dvh;
     touch-action: none;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 
 #app {
@@ -158,19 +160,22 @@ body {
 .game-container {
     width: 100%;
     height: 100vh;
+    height: 100dvh;
     display: flex;
     flex-direction: column;
-    padding: 10px;
-    gap: 10px;
+    padding: 5px;
+    gap: 5px;
+    overflow: hidden;
 }
 
 /* HUD */
 .hud-top {
     display: flex;
     justify-content: space-between;
-    padding: 10px;
+    padding: 8px;
     background: rgba(0, 0, 0, 0.3);
-    border-radius: 10px;
+    border-radius: 8px;
+    flex-shrink: 0;
 }
 
 .hud-item {
@@ -180,12 +185,12 @@ body {
 }
 
 .hud-label {
-    font-size: 0.8em;
+    font-size: 0.7em;
     opacity: 0.8;
 }
 
 .hud-value {
-    font-size: 1.5em;
+    font-size: 1.3em;
     font-weight: bold;
 }
 
@@ -193,12 +198,13 @@ body {
 .game-grid {
     flex: 1;
     display: grid;
-    gap: 3px;
+    gap: 2px;
     background: #2C2416;
-    border-radius: 10px;
-    padding: 8px;
+    border-radius: 8px;
+    padding: 5px;
     overflow: hidden;
     box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+    min-height: 0;
 }
 
 .cell {
@@ -290,10 +296,11 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
+    padding: 8px;
     background: rgba(0, 0, 0, 0.3);
-    border-radius: 10px;
-    gap: 10px;
+    border-radius: 8px;
+    gap: 8px;
+    flex-shrink: 0;
 }
 
 .pipe-queue-container {
@@ -311,13 +318,13 @@ body {
 }
 
 .pipe-label {
-    font-size: 0.8em;
+    font-size: 0.7em;
     opacity: 0.8;
 }
 
 .pipe-preview {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     background: rgba(255, 255, 255, 0.2);
     border: 2px solid rgba(255, 255, 255, 0.3);
     border-radius: 8px;
@@ -327,8 +334,8 @@ body {
 }
 
 .pipe-preview.small {
-    width: 40px;
-    height: 40px;
+    width: 35px;
+    height: 35px;
 }
 
 .next-pipes {
@@ -337,14 +344,16 @@ body {
 }
 
 .btn-speed {
-    padding: 10px 20px;
+    padding: 8px 16px;
     background: #FF9800;
     color: white;
     border: none;
     border-radius: 8px;
     font-weight: bold;
+    font-size: 0.85em;
     cursor: pointer;
     transition: all 0.3s;
+    white-space: nowrap;
 }
 
 .btn-speed:active {
@@ -360,12 +369,12 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px;
+    padding: 8px 12px;
     background: #8B7BA8;
-    border-radius: 15px;
-    margin-top: 10px;
+    border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     position: relative;
+    flex-shrink: 0;
 }
 
 .controller-left,
@@ -377,8 +386,8 @@ body {
 /* D-Pad */
 .dpad {
     display: grid;
-    grid-template-columns: repeat(3, 50px);
-    grid-template-rows: repeat(3, 50px);
+    grid-template-columns: repeat(3, 40px);
+    grid-template-rows: repeat(3, 40px);
     gap: 2px;
 }
 
@@ -406,25 +415,25 @@ body {
 /* Action Buttons */
 .controller-right {
     position: relative;
-    width: 150px;
-    height: 150px;
+    width: 120px;
+    height: 120px;
 }
 
 .action-btn {
     position: absolute;
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     border: 3px solid #3d2f4d;
     font-weight: bold;
-    font-size: 1.2em;
+    font-size: 1em;
     cursor: pointer;
     transition: all 0.1s;
 }
 
 .btn-a {
     background: #E63946;
-    right: 10px;
+    right: 5px;
     top: 50%;
     transform: translateY(-50%);
 }
@@ -432,7 +441,7 @@ body {
 .btn-b {
     background: #FFD60A;
     color: #333;
-    right: 70px;
+    right: 60px;
     top: 50%;
     transform: translateY(-50%);
 }
@@ -443,15 +452,15 @@ body {
 
 .btn-pause {
     position: absolute;
-    top: 10px;
+    top: 5px;
     left: 50%;
     transform: translateX(-50%);
-    padding: 8px 20px;
+    padding: 6px 16px;
     background: #524063;
     border: none;
     color: white;
     border-radius: 20px;
-    font-size: 0.8em;
+    font-size: 0.75em;
     cursor: pointer;
 }
 
@@ -489,6 +498,123 @@ body {
 }
 
 /* Responsive */
+@media (max-height: 700px) {
+    .game-container {
+        padding: 2px;
+        gap: 2px;
+    }
+    
+    .hud-top, .hud-bottom {
+        padding: 4px;
+        border-radius: 6px;
+    }
+    
+    .hud-label {
+        font-size: 0.65em;
+    }
+    
+    .hud-value {
+        font-size: 1.1em;
+    }
+    
+    .game-grid {
+        gap: 1px;
+        padding: 4px;
+    }
+    
+    .pipe-preview {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .pipe-preview.small {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .pipe-label {
+        font-size: 0.65em;
+    }
+    
+    .btn-speed {
+        padding: 6px 12px;
+        font-size: 0.8em;
+    }
+    
+    .controller {
+        padding: 5px 8px;
+        border-radius: 10px;
+    }
+    
+    .dpad {
+        grid-template-columns: repeat(3, 32px);
+        grid-template-rows: repeat(3, 32px);
+    }
+    
+    .dpad-btn {
+        font-size: 1.1em;
+    }
+    
+    .controller-right {
+        width: 90px;
+        height: 90px;
+    }
+    
+    .action-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 0.85em;
+    }
+    
+    .btn-b {
+        right: 48px;
+    }
+    
+    .btn-pause {
+        padding: 4px 12px;
+        font-size: 0.7em;
+    }
+}
+
+@media (max-width: 768px) {
+    .game-container {
+        padding: 3px;
+        gap: 3px;
+    }
+    
+    .hud-top, .hud-bottom {
+        padding: 5px;
+    }
+    
+    .controller {
+        padding: 6px 10px;
+    }
+    
+    .dpad {
+        grid-template-columns: repeat(3, 35px);
+        grid-template-rows: repeat(3, 35px);
+    }
+    
+    .dpad-btn {
+        font-size: 1.2em;
+    }
+    
+    .controller-right {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .action-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 0.9em;
+    }
+    
+    .btn-b {
+        right: 52px;
+    }
+}
+
 @media (min-width: 768px) {
     .game-grid {
         max-width: 600px;
