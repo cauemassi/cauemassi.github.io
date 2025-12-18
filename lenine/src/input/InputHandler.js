@@ -107,6 +107,7 @@ export class InputHandler {
         }
         
         this.resetDrag();
+        this.game.render(); // Garantir que a tela seja atualizada
     }
 
     handleTouchStart(e) {
@@ -185,6 +186,7 @@ export class InputHandler {
         }
         
         this.resetDrag();
+        this.game.render();
     }
 
     startDrag() {
@@ -279,6 +281,7 @@ export class InputHandler {
                 return false; // Indica que não houve movimento
             }
             this.game.tryMoveCard(this.draggedCard, this.sourcePile, this.currentDropTarget);
+            // tryMoveCard já chama render() internamente quando bem-sucedido
             return true;
         }
         
@@ -313,6 +316,7 @@ export class InputHandler {
                     return false; // Indica que não houve movimento
                 }
                 this.game.tryMoveCard(this.draggedCard, this.sourcePile, targetPile);
+                // tryMoveCard já chama render() internamente quando bem-sucedido
                 return true;
             }
         }
