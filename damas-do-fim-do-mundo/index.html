@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Damas do Fim do Mundo</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Menu Screen -->
+        <div id="menu-screen" class="screen active">
+            <div class="menu-container">
+                <h1 class="game-title">🎮 DAMAS DO FIM DO MUNDO</h1>
+                <p class="subtitle">*Enfrente a IA mais sarcástica do universo*</p>
+                
+                <div class="scoreboard">
+                    <div class="score-item">
+                        <span class="score-label">Vitórias</span>
+                        <span class="score-value" id="player-wins">0</span>
+                    </div>
+                    <div class="score-separator">vs</div>
+                    <div class="score-item">
+                        <span class="score-label">IA</span>
+                        <span class="score-value" id="ai-wins">0</span>
+                    </div>
+                </div>
+
+                <div class="menu-form">
+                    <div class="form-group">
+                        <label for="api-key">API Key OpenAI</label>
+                        <input type="password" id="api-key" placeholder="sk-...">
+                        <small>Sua chave é salva localmente</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="difficulty">Dificuldade</label>
+                        <select id="difficulty">
+                            <option value="easy">🟢 Fácil</option>
+                            <option value="medium" selected>🟡 Médio</option>
+                            <option value="hard">🔴 Difícil</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="first-player">Quem começa?</label>
+                        <select id="first-player">
+                            <option value="player">Você</option>
+                            <option value="ai">IA</option>
+                        </select>
+                    </div>
+
+                    <button id="start-game" class="btn btn-primary">Iniciar Partida</button>
+                </div>
+
+                <footer class="credits">
+                    <p>Feito por Caue Massi</p>
+                </footer>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="game-screen" class="screen">
+            <div class="game-container">
+                <div class="game-header">
+                    <div class="game-info">
+                        <span id="turn-indicator">Seu turno</span>
+                        <span id="difficulty-badge" class="badge">Médio</span>
+                    </div>
+                    <button id="menu-btn" class="btn btn-small">Menu</button>
+                </div>
+
+                <div id="help-message" class="help-message">
+                    💡 Clique em uma peça branca, depois clique no quadrado destacado para mover
+                </div>
+
+                <div id="board" class="board"></div>
+
+                <div class="game-footer">
+                    <div class="ai-dialogue">
+                        <div class="ai-avatar">🤖</div>
+                        <div class="dialogue-bubble" id="ai-message">
+                            Prepare-se para perder...
+                        </div>
+                    </div>
+                    <div class="game-actions">
+                        <button id="surrender-btn" class="btn btn-secondary">Desistir</button>
+                        <button id="restart-btn" class="btn btn-secondary">Reiniciar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div id="gameover-screen" class="screen">
+            <div class="gameover-container">
+                <h2 id="gameover-title">Game Over</h2>
+                <p id="gameover-message"></p>
+                <div class="gameover-actions">
+                    <button id="play-again-btn" class="btn btn-primary">Jogar Novamente</button>
+                    <button id="back-menu-btn" class="btn btn-secondary">Menu Principal</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div id="loading-overlay" class="loading-overlay">
+            <div class="spinner"></div>
+            <p>IA pensando...</p>
+        </div>
+    </div>
+
+    <script type="module" src="src/main.js"></script>
+</body>
+</html>
