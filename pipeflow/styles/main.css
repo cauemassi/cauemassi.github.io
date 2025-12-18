@@ -179,7 +179,7 @@ body {
     gap: 5px;
     overflow: hidden;
     box-sizing: border-box;
-    padding-bottom: calc(var(--vh, 1vh) * 10) !important;
+    padding-bottom: calc(var(--vh, 1vh)) !important;
 }
 
 /* HUD */
