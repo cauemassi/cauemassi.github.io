@@ -73,8 +73,7 @@ body {
 #dpad {
     position: absolute;
     bottom: 40px;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 40px;
     width: 180px;
     height: 180px;
 }
