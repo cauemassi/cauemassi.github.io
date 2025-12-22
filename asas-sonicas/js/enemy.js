@@ -36,7 +36,7 @@ class Enemy {
                 this.speed = 1;
                 this.score = 500;
                 this.color = '#8800ff';
-                this.fireRate = 1000;
+                this.fireRate = 0;
                 break;
         }
     }
@@ -70,21 +70,21 @@ class Enemy {
         const projectiles = [];
 
         if (this.type === 'heavy') {
-            // Tiro em leque
-            for (let i = -1; i <= 1; i++) {
-                const angle = Math.PI / 2 + i * 0.3;
+            // Tiro em leque (2 tiros)
+            [-0.3, 0.3].forEach(offset => {
+                const angle = Math.PI / 2 + offset;
                 projectiles.push(new Projectile(
                     this.x, this.y + 20,
-                    Math.cos(angle) * 5, Math.sin(angle) * 5,
+                    Math.cos(angle) * 3, Math.sin(angle) * 3,
                     1, true
                 ));
-            }
+            });
         } else {
             // Tiro direcionado ao jogador
             const dx = playerX - this.x;
             const dy = playerY - this.y;
             const dist = Math.sqrt(dx * dx + dy * dy);
-            const speed = 6;
+            const speed = 4;
             
             projectiles.push(new Projectile(
                 this.x, this.y + 16,

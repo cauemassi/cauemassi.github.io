@@ -6,14 +6,37 @@ class Player {
         this.ship = ship;
         this.x = CONFIG.width / 2;
         this.y = CONFIG.height - 100;
-        this.width = 32;
-        this.height = 32;
+        
+        // Tamanho da nave (ajustado para sprites)
+        this.width = ship.shipSprite ? 64 : 32;
+        this.height = ship.shipSprite ? 64 : 32;
+        
         this.lives = 3;
         this.score = 0;
         this.invulnerable = false;
         this.invulnerableTime = 0;
         this.shootCooldown = 0;
         this.blinkTimer = 0;
+        
+        // Carregar sprite da nave se existir
+        this.shipImage = null;
+        this.shipImageLoaded = false;
+        
+        if (ship.shipSprite) {
+            this.shipImage = new Image();
+            
+            this.shipImage.onload = () => {
+                this.shipImageLoaded = true;
+            };
+            
+            this.shipImage.onerror = () => {
+                console.warn('Falha ao carregar sprite:', ship.shipSprite);
+                this.shipImage = null;
+                this.shipImageLoaded = false;
+            };
+            
+            this.shipImage.src = ship.shipSprite;
+        }
     }
 
     update(input, deltaTime) {
@@ -93,26 +116,37 @@ class Player {
 
         ctx.save();
         
-        // Corpo da nave
-        ctx.fillStyle = this.ship.color;
-        ctx.beginPath();
-        ctx.moveTo(this.x, this.y - 16);
-        ctx.lineTo(this.x - 12, this.y + 8);
-        ctx.lineTo(this.x - 6, this.y + 4);
-        ctx.lineTo(this.x - 6, this.y + 12);
-        ctx.lineTo(this.x + 6, this.y + 12);
-        ctx.lineTo(this.x + 6, this.y + 4);
-        ctx.lineTo(this.x + 12, this.y + 8);
-        ctx.closePath();
-        ctx.fill();
+        // Desenhar sprite se carregado
+        if (this.shipImage && this.shipImageLoaded && this.shipImage.complete && this.shipImage.naturalWidth > 0) {
+            ctx.drawImage(
+                this.shipImage,
+                this.x - this.width / 2,
+                this.y - this.height / 2,
+                this.width,
+                this.height
+            );
+        } else {
+            // Desenho padrão (geometria)
+            ctx.fillStyle = this.ship.color;
+            ctx.beginPath();
+            ctx.moveTo(this.x, this.y - 16);
+            ctx.lineTo(this.x - 12, this.y + 8);
+            ctx.lineTo(this.x - 6, this.y + 4);
+            ctx.lineTo(this.x - 6, this.y + 12);
+            ctx.lineTo(this.x + 6, this.y + 12);
+            ctx.lineTo(this.x + 6, this.y + 4);
+            ctx.lineTo(this.x + 12, this.y + 8);
+            ctx.closePath();
+            ctx.fill();
 
-        // Detalhes
-        ctx.fillStyle = this.ship.accentColor;
-        ctx.fillRect(this.x - 3, this.y - 8, 6, 12);
-        
-        // Cockpit
-        ctx.fillStyle = '#00ffff';
-        ctx.fillRect(this.x - 2, this.y - 4, 4, 4);
+            // Detalhes
+            ctx.fillStyle = this.ship.accentColor;
+            ctx.fillRect(this.x - 3, this.y - 8, 6, 12);
+            
+            // Cockpit
+            ctx.fillStyle = '#00ffff';
+            ctx.fillRect(this.x - 2, this.y - 4, 4, 4);
+        }
 
         ctx.restore();
     }

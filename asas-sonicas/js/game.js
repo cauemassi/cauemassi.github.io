@@ -23,16 +23,34 @@ class Game {
         this.enemies = [];
         this.projectiles = [];
         this.particles = [];
-        this.background = new Background();
+        this.background = null;
         this.boss = null;
         this.bossMode = false;
         this.waveTimer = 0;
         this.currentWave = 0;
         this.gameTime = 0;
+        this.currentLevel = null;
     }
 
-    startGame(shipIndex) {
+    startGame(shipIndex, levelIndex = 0) {
         this.reset();
+        
+        // Verificar se LEVELS existe
+        if (typeof LEVELS !== 'undefined' && LEVELS[levelIndex]) {
+            this.currentLevel = LEVELS[levelIndex];
+        } else {
+            // Fallback para configuração padrão
+            this.currentLevel = {
+                id: 1,
+                name: 'FASE PADRÃO',
+                background: null,
+                difficulty: 1,
+                bossDuration: 60000,
+                waveInterval: 2000
+            };
+        }
+        
+        this.background = new Background(this.currentLevel);
         this.player = new Player(SHIPS[shipIndex]);
     }
 
@@ -54,14 +72,17 @@ class Game {
             this.projectiles.push(...newProjectiles);
         }
 
-        // Spawn waves
-        if (!this.bossMode && this.gameTime > 60000) {
+        // Spawn waves (usando configuração da fase)
+        const bossDuration = this.currentLevel ? this.currentLevel.bossDuration : 60000;
+        const waveInterval = this.currentLevel ? this.currentLevel.waveInterval : 2000;
+        
+        if (!this.bossMode && this.gameTime > bossDuration) {
             // Spawn boss
             this.boss = new Boss();
             this.bossMode = true;
         } else if (!this.bossMode) {
             this.waveTimer += deltaTime;
-            if (this.waveTimer > 2000) {
+            if (this.waveTimer > waveInterval) {
                 this.spawnWave();
                 this.waveTimer = 0;
             }
@@ -119,10 +140,15 @@ class Game {
         this.currentWave++;
         const types = ['drone', 'fighter', 'heavy'];
         const type = types[Math.min(Math.floor(this.currentWave / 3), 2)];
-        const count = 3 + Math.floor(this.currentWave / 2);
+        
+        // Heavy: máximo 2 por onda
+        let count = Math.min(3 + Math.floor(this.currentWave / 5), 6);
+        if (type === 'heavy') {
+            count = Math.min(count, 2);
+        }
 
         for (let i = 0; i < count; i++) {
-            const x = 50 + (CONFIG.width - 100) * (i / count);
+            const x = 30 + (CONFIG.width - 60) * (i / (count - 1));
             const y = -50 - i * 50;
             this.enemies.push(new Enemy(x, y, type));
         }

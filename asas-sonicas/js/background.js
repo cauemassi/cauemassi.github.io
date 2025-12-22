@@ -2,10 +2,25 @@
 // BACKGROUND
 // ============================================
 class Background {
-    constructor() {
+    constructor(levelConfig = null) {
         this.stars = [];
         this.clouds = [];
         this.scrollSpeed = 2;
+        this.backgroundImage = null;
+        this.bgY = 0;
+        
+        // Carregar imagem de fundo se existir
+        if (levelConfig && levelConfig.background) {
+            this.backgroundImage = new Image();
+            
+            // Handler de erro para imagens quebradas
+            this.backgroundImage.onerror = () => {
+                console.warn(`Falha ao carregar background: ${levelConfig.background}`);
+                this.backgroundImage = null;
+            };
+            
+            this.backgroundImage.src = levelConfig.background;
+        }
         
         for (let i = 0; i < 100; i++) {
             this.stars.push({
@@ -27,6 +42,14 @@ class Background {
     }
 
     update() {
+        // Scroll da imagem de fundo
+        if (this.backgroundImage) {
+            this.bgY += this.scrollSpeed;
+            if (this.bgY >= CONFIG.height) {
+                this.bgY = 0;
+            }
+        }
+
         this.stars.forEach(star => {
             star.y += star.speed;
             if (star.y > CONFIG.height) {
@@ -45,13 +68,19 @@ class Background {
     }
 
     draw(ctx) {
-        // Gradiente de fundo
-        const gradient = ctx.createLinearGradient(0, 0, 0, CONFIG.height);
-        gradient.addColorStop(0, '#000033');
-        gradient.addColorStop(0.5, '#000066');
-        gradient.addColorStop(1, '#003366');
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, CONFIG.width, CONFIG.height);
+        // Desenhar imagem de fundo se existir (scroll contínuo)
+        if (this.backgroundImage && this.backgroundImage.complete && !this.backgroundImage.error && this.backgroundImage.naturalWidth > 0) {
+            ctx.drawImage(this.backgroundImage, 0, this.bgY - CONFIG.height, CONFIG.width, CONFIG.height);
+            ctx.drawImage(this.backgroundImage, 0, this.bgY, CONFIG.width, CONFIG.height);
+        } else {
+            // Gradiente de fundo padrão
+            const gradient = ctx.createLinearGradient(0, 0, 0, CONFIG.height);
+            gradient.addColorStop(0, '#000033');
+            gradient.addColorStop(0.5, '#000066');
+            gradient.addColorStop(1, '#003366');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, CONFIG.width, CONFIG.height);
+        }
 
         // Estrelas
         this.stars.forEach(star => {

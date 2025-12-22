@@ -6,12 +6,44 @@ class SceneManager {
         this.game = game;
         this.currentScene = 'menu';
         this.selectedShip = 0;
+        this.selectedLevel = 0;
+        
+        // Cache de imagens para evitar recarregar
+        this.imageCache = {};
+    }
+    
+    // Helper para carregar imagem com segurança
+    loadImage(src) {
+        if (!src) return null;
+        
+        // Retornar do cache se já foi carregado
+        if (this.imageCache[src]) {
+            return this.imageCache[src];
+        }
+        
+        const img = new Image();
+        img.onerror = () => {
+            console.warn(`Falha ao carregar imagem: ${src}`);
+            this.imageCache[src] = null;
+        };
+        img.src = src;
+        
+        this.imageCache[src] = img;
+        return img;
+    }
+    
+    // Helper para verificar se imagem está pronta
+    isImageReady(img) {
+        return img && img.complete && img.naturalWidth > 0;
     }
 
     update(input, deltaTime) {
         switch(this.currentScene) {
             case 'menu':
                 this.updateMenu(input);
+                break;
+            case 'levelSelect':
+                this.updateLevelSelect(input);
                 break;
             case 'shipSelect':
                 this.updateShipSelect(input);
@@ -33,6 +65,9 @@ class SceneManager {
             case 'menu':
                 this.drawMenu(ctx);
                 break;
+            case 'levelSelect':
+                this.drawLevelSelect(ctx);
+                break;
             case 'shipSelect':
                 this.drawShipSelect(ctx);
                 break;
@@ -50,7 +85,7 @@ class SceneManager {
 
     updateMenu(input) {
         if (input.isPressed('shoot') || input.isPressed('up')) {
-            this.currentScene = 'shipSelect';
+            this.currentScene = 'levelSelect';
             input.reset();
         }
     }
@@ -93,6 +128,124 @@ class SceneManager {
         ctx.globalAlpha = 1;
     }
 
+    // ============================================
+    // SELEÇÃO DE FASES
+    // ============================================
+    updateLevelSelect(input) {
+        // Verificar se LEVELS está disponível
+        if (typeof LEVELS === 'undefined' || !LEVELS.length) {
+            console.error('LEVELS não está definido!');
+            this.currentScene = 'menu';
+            return;
+        }
+
+        // Navegação vertical
+        if (input.isPressed('up') && !this.upPressed) {
+            this.selectedLevel = Math.max(0, this.selectedLevel - 1);
+            this.upPressed = true;
+        } else if (!input.isPressed('up')) {
+            this.upPressed = false;
+        }
+
+        if (input.isPressed('down') && !this.downPressed) {
+            this.selectedLevel = Math.min(LEVELS.length - 1, this.selectedLevel + 1);
+            this.downPressed = true;
+        } else if (!input.isPressed('down')) {
+            this.downPressed = false;
+        }
+
+        // Confirmar seleção (apenas fases não concluídas)
+        if (input.isPressed('shoot')) {
+            const level = LEVELS[this.selectedLevel];
+            if (!ProgressManager.isCompleted(level.id)) {
+                this.currentScene = 'shipSelect';
+                input.reset();
+            }
+        }
+
+        // Voltar ao menu
+        if (input.isPressed('left')) {
+            this.currentScene = 'menu';
+            input.reset();
+        }
+    }
+
+    drawLevelSelect(ctx) {
+        // Verificar se LEVELS está disponível
+        if (typeof LEVELS === 'undefined' || !LEVELS.length) {
+            ctx.fillStyle = '#000033';
+            ctx.fillRect(0, 0, CONFIG.width, CONFIG.height);
+            ctx.fillStyle = '#ff0000';
+            ctx.font = '20px monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText('ERRO: LEVELS não carregado', CONFIG.width / 2, CONFIG.height / 2);
+            return;
+        }
+
+        ctx.fillStyle = '#000033';
+        ctx.fillRect(0, 0, CONFIG.width, CONFIG.height);
+
+        // Título
+        ctx.fillStyle = '#00ffff';
+        ctx.font = 'bold 32px monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText('SELECIONE A FASE', CONFIG.width / 2, 80);
+
+        // Lista de fases
+        const startY = 150;
+        const spacing = 100;
+
+        LEVELS.forEach((level, index) => {
+            const y = startY + (index * spacing);
+            const isSelected = index === this.selectedLevel;
+            const isCompleted = ProgressManager.isCompleted(level.id);
+
+            // Box da fase
+            ctx.fillStyle = isSelected ? 'rgba(0, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.3)';
+            ctx.fillRect(60, y - 40, CONFIG.width - 120, 80);
+
+            if (isSelected) {
+                ctx.strokeStyle = '#00ffff';
+                ctx.lineWidth = 3;
+                ctx.strokeRect(60, y - 40, CONFIG.width - 120, 80);
+            }
+
+            // Número da fase
+            ctx.fillStyle = isCompleted ? '#666666' : '#ffffff';
+            ctx.font = 'bold 24px monospace';
+            ctx.textAlign = 'left';
+            ctx.fillText(`FASE ${level.id}`, 80, y - 5);
+
+            // Nome da fase
+            ctx.font = '16px monospace';
+            ctx.fillText(level.name, 80, y + 20);
+
+            // Status
+            if (isCompleted) {
+                ctx.fillStyle = '#00ff00';
+                ctx.font = 'bold 18px monospace';
+                ctx.textAlign = 'right';
+                ctx.fillText('✓ COMPLETA', CONFIG.width - 80, y + 5);
+            } else if (isSelected) {
+                ctx.fillStyle = '#ffff00';
+                ctx.font = 'bold 14px monospace';
+                ctx.textAlign = 'right';
+                ctx.fillText('▶ ESPAÇO', CONFIG.width - 80, y + 5);
+            }
+        });
+
+        // Instruções
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#888888';
+        ctx.font = '12px monospace';
+        ctx.fillText('↑↓: NAVEGAR | ESPAÇO: SELECIONAR | ←: VOLTAR', CONFIG.width / 2, CONFIG.height - 50);
+
+        // Nota sobre fases concluídas
+        ctx.fillStyle = '#666666';
+        ctx.font = '11px monospace';
+        ctx.fillText('Fases concluídas não podem ser selecionadas', CONFIG.width / 2, CONFIG.height - 25);
+    }
+
     updateShipSelect(input) {
         if (input.isPressed('left') && !this.leftPressed) {
             this.selectedShip = (this.selectedShip - 1 + SHIPS.length) % SHIPS.length;
@@ -109,8 +262,14 @@ class SceneManager {
         }
 
         if (input.isPressed('shoot')) {
-            this.game.startGame(this.selectedShip);
+            this.game.startGame(this.selectedShip, this.selectedLevel);
             this.currentScene = 'game';
+            input.reset();
+        }
+
+        // Voltar
+        if (input.isPressed('down')) {
+            this.currentScene = 'levelSelect';
             input.reset();
         }
     }
@@ -126,47 +285,102 @@ class SceneManager {
 
         const ship = SHIPS[this.selectedShip];
         const centerX = CONFIG.width / 2;
-        const centerY = 250;
+        
+        // Layout: Piloto (esquerda) | Nave (direita)
+        const pilotX = 120;
+        const shipX = 360;
+        const previewY = 200;
 
-        // Preview da nave
+        // ========== PILOTO ==========
         ctx.save();
-        ctx.translate(centerX, centerY);
-        ctx.scale(2, 2);
         
-        ctx.fillStyle = ship.color;
-        ctx.beginPath();
-        ctx.moveTo(0, -16);
-        ctx.lineTo(-12, 8);
-        ctx.lineTo(-6, 4);
-        ctx.lineTo(-6, 12);
-        ctx.lineTo(6, 12);
-        ctx.lineTo(6, 4);
-        ctx.lineTo(12, 8);
-        ctx.closePath();
-        ctx.fill();
+        // Box do piloto
+        ctx.fillStyle = 'rgba(0, 255, 255, 0.1)';
+        ctx.fillRect(20, 120, 200, 200);
+        ctx.strokeStyle = '#00ffff';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(20, 120, 200, 200);
 
-        ctx.fillStyle = ship.accentColor;
-        ctx.fillRect(-3, -8, 6, 12);
+        // Sprite do piloto ou placeholder
+        const pilotImg = this.loadImage(ship.pilotSprite);
+        if (this.isImageReady(pilotImg)) {
+            ctx.drawImage(pilotImg, 40, 140, 160, 160);
+        } else {
+            // Placeholder do piloto (boneco simples)
+            ctx.fillStyle = '#00ffff';
+            ctx.beginPath();
+            ctx.arc(pilotX, previewY - 40, 30, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(pilotX - 25, previewY - 10, 50, 60);
+            ctx.fillRect(pilotX - 35, previewY + 10, 15, 40);
+            ctx.fillRect(pilotX + 20, previewY + 10, 15, 40);
+        }
         
-        ctx.fillStyle = '#00ffff';
-        ctx.fillRect(-2, -4, 4, 4);
+        // Nome do piloto
+        ctx.fillStyle = '#ffff00';
+        ctx.font = 'bold 12px monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(ship.pilotName || 'PILOTO', pilotX, 310);
+        
+        ctx.restore();
+
+        // ========== NAVE ==========
+        ctx.save();
+        
+        // Box da nave
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+        ctx.fillRect(260, 120, 200, 200);
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(260, 120, 200, 200);
+
+        // Sprite da nave ou desenho padrão
+        const shipImg = this.loadImage(ship.shipSprite);
+        if (this.isImageReady(shipImg)) {
+            ctx.drawImage(shipImg, shipX - 50, previewY - 50, 100, 100);
+        } else {
+            // Desenho padrão da nave (ampliado)
+            ctx.translate(shipX, previewY);
+            ctx.scale(2.5, 2.5);
+            
+            ctx.fillStyle = ship.color;
+            ctx.beginPath();
+            ctx.moveTo(0, -16);
+            ctx.lineTo(-12, 8);
+            ctx.lineTo(-6, 4);
+            ctx.lineTo(-6, 12);
+            ctx.lineTo(6, 12);
+            ctx.lineTo(6, 4);
+            ctx.lineTo(12, 8);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.fillStyle = ship.accentColor;
+            ctx.fillRect(-3, -8, 6, 12);
+            
+            ctx.fillStyle = '#00ffff';
+            ctx.fillRect(-2, -4, 4, 4);
+        }
 
         ctx.restore();
 
-        // Stats
+        // ========== INFO DA NAVE ==========
         ctx.fillStyle = '#ffffff';
-        ctx.font = '20px monospace';
-        ctx.fillText(ship.name, centerX, 380);
+        ctx.font = '24px monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(ship.name, centerX, 360);
 
         ctx.font = '14px monospace';
-        const statsY = 420;
+        const statsY = 400;
         const lineHeight = 25;
         
         ctx.textAlign = 'left';
         const statX = centerX - 120;
         
-        ctx.fillText(`VELOCIDADE: ${'█'.repeat(ship.speed / 1.5)}`, statX, statsY);
-        ctx.fillText(`DANO:       ${'█'.repeat(ship.damage)}`, statX, statsY + lineHeight);
+        ctx.fillText(`VELOCIDADE: ${'█'.repeat(Math.floor(ship.speed / 1.5))}`, statX, statsY);
+        ctx.fillText(`DANO:       ${'█'.repeat(Math.floor(ship.damage))}`, statX, statsY + lineHeight);
         ctx.fillText(`CADÊNCIA:   ${'█'.repeat(Math.floor(1000 / ship.fireRate))}`, statX, statsY + lineHeight * 2);
         ctx.fillText(`TIPO:       ${ship.shotType.toUpperCase()}`, statX, statsY + lineHeight * 3);
 
@@ -174,7 +388,7 @@ class SceneManager {
         ctx.textAlign = 'center';
         ctx.fillStyle = '#888888';
         ctx.font = '12px monospace';
-        ctx.fillText('◀ SETAS: ESCOLHER | ESPAÇO: CONFIRMAR ▶', centerX, 600);
+        ctx.fillText('◀ SETAS: ESCOLHER | ESPAÇO: CONFIRMAR | ↓: VOLTAR ▶', centerX, 600);
     }
 
     updateGameOver(input) {
@@ -203,7 +417,11 @@ class SceneManager {
 
     updateVictory(input) {
         if (input.isPressed('shoot')) {
-            this.currentScene = 'menu';
+            // Marcar fase como concluída
+            const level = LEVELS[this.selectedLevel];
+            ProgressManager.save(level.id);
+            
+            this.currentScene = 'levelSelect';
             input.reset();
         }
     }
