@@ -7,6 +7,7 @@ class SceneManager {
         this.currentScene = 'menu';
         this.selectedShip = 0;
         this.selectedLevel = 0;
+        this.paused = false;
         
         // Cache de imagens para evitar recarregar
         this.imageCache = {};
@@ -56,6 +57,21 @@ class SceneManager {
     }
 
     update(input, deltaTime) {
+        // Pausar/despausar durante o jogo
+        if (this.currentScene === 'game' && input.wasPressed('start')) {
+            this.paused = !this.paused;
+        }
+
+        // Se pausado, permitir voltar ao menu com B
+        if (this.paused) {
+            if (input.wasPressed('back')) {
+                this.paused = false;
+                this.currentScene = 'menu';
+                input.reset();
+            }
+            return;
+        }
+
         switch(this.currentScene) {
             case 'menu':
                 this.updateMenu(input);
@@ -91,6 +107,10 @@ class SceneManager {
                 break;
             case 'game':
                 this.game.drawGame(ctx);
+                // Desenhar overlay de pausa se necessário
+                if (this.paused) {
+                    this.drawPause(ctx);
+                }
                 break;
             case 'gameOver':
                 this.drawGameOver(ctx);
@@ -128,24 +148,24 @@ class SceneManager {
         // Instruções
         ctx.font = '15px "Press Start 2P", monospace';
         ctx.fillStyle = '#ffff00';
-        ctx.strokeText('PRESSIONE ESPACO', CONFIG.width / 2, 550);
-        ctx.fillText('PRESSIONE ESPACO', CONFIG.width / 2, 550);
-        ctx.strokeText('OU TOQUE PARA INICIAR', CONFIG.width / 2, 580);
-        ctx.fillText('OU TOQUE PARA INICIAR', CONFIG.width / 2, 580);
+        ctx.strokeText('PRESSIONE A OU START', CONFIG.width / 2, 550);
+        ctx.fillText('PRESSIONE A OU START', CONFIG.width / 2, 550);
+        ctx.strokeText('PARA INICIAR', CONFIG.width / 2, 580);
+        ctx.fillText('PARA INICIAR', CONFIG.width / 2, 580);
 
         // Controles
         ctx.font = '8px "Press Start 2P", monospace';
-        ctx.strokeText('WASD/SETAS: MOVER', CONFIG.width / 2, 630);
-        ctx.fillText('WASD/SETAS: MOVER', CONFIG.width / 2, 630);
-        ctx.strokeText('ESPACO: ATIRAR', CONFIG.width / 2, 655);
-        ctx.fillText('ESPACO: ATIRAR', CONFIG.width / 2, 655);
+        ctx.strokeText('SETAS: MOVER', CONFIG.width / 2, 630);
+        ctx.fillText('SETAS: MOVER', CONFIG.width / 2, 630);
+        ctx.strokeText('A: ATIRAR | START: PAUSAR', CONFIG.width / 2, 655);
+        ctx.fillText('A: ATIRAR | START: PAUSAR', CONFIG.width / 2, 655);
 
         // Animação START
         const pulse = Math.sin(Date.now() * 0.005) * 0.3 + 0.7;
         ctx.globalAlpha = pulse;
         ctx.font = '10px "Press Start 2P", monospace';
-        ctx.strokeText('> START <', CONFIG.width / 2, 690);
-        ctx.fillText('> START <', CONFIG.width / 2, 690);
+        ctx.strokeText('TOQUE A OU START', CONFIG.width / 2, 690);
+        ctx.fillText('TOQUE A OU START', CONFIG.width / 2, 690);
         ctx.globalAlpha = 1;
     }
 
@@ -176,7 +196,7 @@ class SceneManager {
         }
 
         // Confirmar seleção (apenas fases não concluídas)
-        if (input.isPressed('shoot')) {
+        if (input.isPressed('shoot') || input.wasPressed('shoot')) {
             const level = LEVELS[this.selectedLevel];
             if (!ProgressManager.isCompleted(level.id)) {
                 this.currentScene = 'shipSelect';
@@ -184,8 +204,8 @@ class SceneManager {
             }
         }
 
-        // Voltar ao menu
-        if (input.isPressed('left')) {
+        // Botão B para voltar ao menu
+        if (input.wasPressed('back')) {
             this.currentScene = 'menu';
             input.reset();
         }
@@ -251,7 +271,7 @@ class SceneManager {
                 ctx.fillStyle = '#ffff00';
                 ctx.font = '8px "Press Start 2P", monospace';
                 ctx.textAlign = 'right';
-                ctx.fillText('▶ ESPAÇO', CONFIG.width - 80, y + 5);
+                ctx.fillText('▶ PRESSIONE A', CONFIG.width - 80, y + 5);
             }
         });
 
@@ -259,7 +279,7 @@ class SceneManager {
         ctx.textAlign = 'center';
         ctx.fillStyle = '#888888';
         ctx.font = '12px "Press Start 2P", monospace';
-        ctx.fillText('↑↓: NAVEGAR | ESPAÇO: SELECIONAR | ←: VOLTAR', CONFIG.width / 2, CONFIG.height - 50);
+        ctx.fillText('↑↓: NAVEGAR | A: SELECIONAR | B: VOLTAR', CONFIG.width / 2, CONFIG.height - 50);
 
         // Nota sobre fases concluídas
         ctx.fillStyle = '#666666';
@@ -282,14 +302,14 @@ class SceneManager {
             this.rightPressed = false;
         }
 
-        if (input.isPressed('shoot')) {
+        if (input.isPressed('shoot') || input.wasPressed('shoot')) {
             this.game.startGame(this.selectedShip, this.selectedLevel);
             this.currentScene = 'game';
             input.reset();
         }
 
-        // Voltar
-        if (input.isPressed('down')) {
+        // Botão B para voltar
+        if (input.wasPressed('back')) {
             this.currentScene = 'levelSelect';
             input.reset();
         }
@@ -409,7 +429,7 @@ class SceneManager {
         ctx.textAlign = 'center';
         ctx.fillStyle = '#888888';
         ctx.font = '12px "Press Start 2P", monospace';
-        ctx.fillText('◀ SETAS: ESCOLHER | ESPAÇO: CONFIRMAR | ↓: VOLTAR ▶', centerX, 600);
+        ctx.fillText('◀ ▶: ESCOLHER | A: CONFIRMAR | B: VOLTAR', centerX, 600);
     }
 
     updateGameOver(input) {
@@ -433,7 +453,7 @@ class SceneManager {
         ctx.fillText(`PONTUAÇÃO: ${this.game.player.score}`, CONFIG.width / 2, CONFIG.height / 2 + 20);
 
         ctx.font = '10px "Press Start 2P", monospace';
-        ctx.fillText('PRESSIONE ESPAÇO', CONFIG.width / 2, CONFIG.height / 2 + 80);
+        ctx.fillText('PRESSIONE A', CONFIG.width / 2, CONFIG.height / 2 + 80);
     }
 
     updateVictory(input) {
@@ -461,6 +481,24 @@ class SceneManager {
         ctx.fillText(`PONTUAÇÃO: ${this.game.player.score}`, CONFIG.width / 2, CONFIG.height / 2 + 20);
 
         ctx.font = '10px "Press Start 2P", monospace';
-        ctx.fillText('PRESSIONE ESPAÇO', CONFIG.width / 2, CONFIG.height / 2 + 80);
+        ctx.fillText('PRESSIONE A', CONFIG.width / 2, CONFIG.height / 2 + 80);
+    }
+
+    drawPause(ctx) {
+        // Overlay escuro
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+        ctx.fillRect(0, 0, CONFIG.width, CONFIG.height);
+
+        // Texto PAUSE
+        ctx.fillStyle = '#ffff00';
+        ctx.font = '20px "Press Start 2P", monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText('PAUSE', CONFIG.width / 2, CONFIG.height / 2 - 30);
+
+        // Instruções
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '10px "Press Start 2P", monospace';
+        ctx.fillText('START: CONTINUAR', CONFIG.width / 2, CONFIG.height / 2 + 20);
+        ctx.fillText('B: VOLTAR AO MENU', CONFIG.width / 2, CONFIG.height / 2 + 50);
     }
 }

@@ -1,5 +1,5 @@
 // ============================================
-// INPUT MANAGER
+// INPUT MANAGER v2.0 - Game Boy Controls
 // ============================================
 class InputManager {
     constructor() {
@@ -10,6 +10,8 @@ class InputManager {
         this.setupKeyboard();
         this.setupTouch();
         this.setupJoystick();
+        
+        console.log('InputManager v2.0 carregado com wasPressed()');
     }
 
     setupKeyboard() {
@@ -18,15 +20,20 @@ class InputManager {
             'ArrowDown': 'down', 'KeyS': 'down',
             'ArrowLeft': 'left', 'KeyA': 'left',
             'ArrowRight': 'right', 'KeyD': 'right',
-            'Space': 'shoot',
-            'ShiftLeft': 'special'
+            'Space': 'shoot', 'KeyZ': 'shoot',
+            'KeyX': 'back', 'Escape': 'back',
+            'Enter': 'start',
+            'ShiftLeft': 'select'
         };
 
         window.addEventListener('keydown', (e) => {
             const key = keyMap[e.code];
             if (key) {
                 e.preventDefault();
-                this.keys[key] = true;
+                if (!this.keys[key]) {
+                    this.keys[key] = true;
+                    this.keys[key + '_pressed'] = true;
+                }
             }
         });
 
@@ -40,22 +47,84 @@ class InputManager {
     }
 
     setupTouch() {
-        const btnShoot = document.getElementById('btnShoot');
+        const btnA = document.getElementById('btnA');
+        const btnB = document.getElementById('btnB');
+        const btnStart = document.getElementById('btnStart');
+        const btnSelect = document.getElementById('btnSelect');
         
-        if (btnShoot) {
-            btnShoot.addEventListener('touchstart', (e) => {
+        // Botão A (atirar)
+        if (btnA) {
+            btnA.addEventListener('touchstart', (e) => {
                 e.preventDefault();
                 this.keys.shoot = true;
+                this.keys.shoot_pressed = true;
             });
 
-            btnShoot.addEventListener('touchend', (e) => {
+            btnA.addEventListener('touchend', (e) => {
                 e.preventDefault();
                 this.keys.shoot = false;
             });
 
-            btnShoot.addEventListener('touchcancel', (e) => {
+            btnA.addEventListener('touchcancel', (e) => {
                 e.preventDefault();
                 this.keys.shoot = false;
+            });
+        }
+
+        // Botão B (voltar)
+        if (btnB) {
+            btnB.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                this.keys.back = true;
+                this.keys.back_pressed = true;
+            });
+
+            btnB.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                this.keys.back = false;
+            });
+
+            btnB.addEventListener('touchcancel', (e) => {
+                e.preventDefault();
+                this.keys.back = false;
+            });
+        }
+
+        // Botão START (pausar)
+        if (btnStart) {
+            btnStart.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                this.keys.start = true;
+                this.keys.start_pressed = true;
+            });
+
+            btnStart.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                this.keys.start = false;
+            });
+
+            btnStart.addEventListener('touchcancel', (e) => {
+                e.preventDefault();
+                this.keys.start = false;
+            });
+        }
+
+        // Botão SELECT
+        if (btnSelect) {
+            btnSelect.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                this.keys.select = true;
+                this.keys.select_pressed = true;
+            });
+
+            btnSelect.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                this.keys.select = false;
+            });
+
+            btnSelect.addEventListener('touchcancel', (e) => {
+                e.preventDefault();
+                this.keys.select = false;
             });
         }
     }
@@ -136,6 +205,14 @@ class InputManager {
 
     isPressed(key) {
         return this.keys[key] || false;
+    }
+
+    wasPressed(key) {
+        const pressed = this.keys[key + '_pressed'] || false;
+        if (pressed) {
+            this.keys[key + '_pressed'] = false;
+        }
+        return pressed;
     }
 
     reset() {
