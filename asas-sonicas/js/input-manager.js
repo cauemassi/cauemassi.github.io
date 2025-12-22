@@ -135,7 +135,7 @@ class InputManager {
         
         if (!joystick || !stick) return;
 
-        const maxDistance = 40;
+        const maxDistance = 32; // Ajustado para joystick menor (120px / 2 - 28)
         let startX = 0;
         let startY = 0;
 

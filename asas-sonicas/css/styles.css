@@ -80,17 +80,17 @@ body {
 
 /* Botões A e B (estilo Game Boy) */
 #btnA {
-    bottom: 120px;
-    right: 60px;
-    width: 70px;
-    height: 70px;
+    bottom: 100px;
+    right: 40px;
+    width: 55px;
+    height: 55px;
 }
 
 #btnB {
-    bottom: 60px;
-    right: 140px;
-    width: 70px;
-    height: 70px;
+    bottom: 50px;
+    right: 110px;
+    width: 55px;
+    height: 55px;
 }
 
 /* Botões SELECT e START */
@@ -98,13 +98,13 @@ body {
     position: absolute;
     background: rgba(80, 80, 80, 0.6);
     border: 3px solid rgba(50, 50, 50, 0.8);
-    border-radius: 20px;
-    padding: 8px 15px;
+    border-radius: 15px;
+    padding: 6px 12px;
     cursor: pointer;
     touch-action: none;
     transition: all 0.1s;
     font-family: 'Press Start 2P', monospace;
-    font-size: 8px;
+    font-size: 6px;
     color: #ffffff;
     text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.5);
     display: flex;
@@ -118,29 +118,29 @@ body {
 }
 
 #btnSelect {
-    bottom: 20px;
+    bottom: 15px;
     left: 50%;
-    transform: translateX(-80px) rotate(-20deg);
+    transform: translateX(-70px) rotate(-20deg);
 }
 
 #btnStart {
-    bottom: 20px;
+    bottom: 15px;
     left: 50%;
-    transform: translateX(20px) rotate(-20deg);
+    transform: translateX(15px) rotate(-20deg);
 }
 
 #joystick {
     position: absolute;
     bottom: 40px;
-    left: 40px;
-    width: 150px;
-    height: 150px;
+    left: 20px;
+    width: 120px;
+    height: 120px;
 }
 
 #joystickBase {
     position: absolute;
-    width: 150px;
-    height: 150px;
+    width: 120px;
+    height: 120px;
     background: radial-gradient(circle, rgba(100, 150, 255, 0.3) 0%, rgba(100, 150, 255, 0.1) 100%);
     border: 4px solid rgba(100, 150, 255, 0.5);
     border-radius: 50%;
@@ -149,8 +149,8 @@ body {
 
 #joystickStick {
     position: absolute;
-    width: 70px;
-    height: 70px;
+    width: 55px;
+    height: 55px;
     background: radial-gradient(circle, rgba(150, 200, 255, 0.8) 0%, rgba(100, 150, 255, 0.6) 100%);
     border: 3px solid rgba(255, 255, 255, 0.6);
     border-radius: 50%;
