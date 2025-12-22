@@ -56,6 +56,18 @@ const SHIPS = [
         shipSprite: 'images/ships/leviatan.png',
         pilotSprite: 'images/pilots/viking.png',
         pilotName: 'IRON SHIELD'
+    },
+    { 
+        name: 'TUC', 
+        speed: 5, 
+        damage: 5, 
+        fireRate: 400, 
+        shotType: 'focused', 
+        color: '#0088ff', 
+        accentColor: '#0044aa',
+        shipSprite: 'images/ships/selva.png',
+        pilotSprite: 'images/pilots/tuc.png',
+        pilotName: 'TUC'
     }
 ];
 

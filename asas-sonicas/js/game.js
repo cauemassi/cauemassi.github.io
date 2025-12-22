@@ -249,7 +249,7 @@ class Game {
         if (!this.player) return;
 
         ctx.fillStyle = '#ffffff';
-        ctx.font = '16px monospace';
+        ctx.font = '10px "Press Start 2P", monospace';
         ctx.textAlign = 'left';
 
         // Score

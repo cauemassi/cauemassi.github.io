@@ -10,6 +10,24 @@ class SceneManager {
         
         // Cache de imagens para evitar recarregar
         this.imageCache = {};
+        
+        // Carregar imagem de fundo do menu
+        console.log('Carregando background do menu...');
+        this.menuBackground = new Image();
+        this.menuBackgroundLoaded = false;
+        
+        this.menuBackground.onload = () => {
+            this.menuBackgroundLoaded = true;
+            console.log('✓ Background do menu carregado:', this.menuBackground.width + 'x' + this.menuBackground.height);
+        };
+        
+        this.menuBackground.onerror = () => {
+            console.error('✗ Erro ao carregar background do menu!');
+            this.menuBackgroundLoaded = false;
+        };
+        
+        this.menuBackground.src = 'images/backgrounds/capa.png';
+        console.log('Background src:', this.menuBackground.src);
     }
     
     // Helper para carregar imagem com segurança
@@ -91,40 +109,43 @@ class SceneManager {
     }
 
     drawMenu(ctx) {
-        ctx.fillStyle = '#000033';
-        ctx.fillRect(0, 0, CONFIG.width, CONFIG.height);
+        // Desenhar background se carregado
+        if (this.menuBackground && this.menuBackgroundLoaded && this.menuBackground.complete && this.menuBackground.naturalWidth > 0) {
+            ctx.drawImage(this.menuBackground, 0, 0, CONFIG.width, CONFIG.height);
+        } else {
+            // Fallback: fundo padrão
+            ctx.fillStyle = '#000033';
+            ctx.fillRect(0, 0, CONFIG.width, CONFIG.height);
+        }
 
-        // Título
-        ctx.save();
-        ctx.shadowColor = '#00ffff';
-        ctx.shadowBlur = 20;
-        ctx.fillStyle = '#00ffff';
-        ctx.font = 'bold 48px monospace';
+        // Título (já está na imagem de fundo)
+        
+        // Configurar estilo de texto com borda
         ctx.textAlign = 'center';
-        ctx.fillText('ASAS SÔNICAS', CONFIG.width / 2, 200);
-        ctx.restore();
-
-        // Subtítulo
-        ctx.fillStyle = '#ffffff';
-        ctx.font = '20px monospace';
-        ctx.fillText('SHOOT \'EM UP 16 BITS', CONFIG.width / 2, 250);
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = '#000000';
 
         // Instruções
-        ctx.font = '16px monospace';
-        ctx.fillText('PRESSIONE ESPAÇO', CONFIG.width / 2, 400);
-        ctx.fillText('OU TOQUE PARA INICIAR', CONFIG.width / 2, 430);
+        ctx.font = '15px "Press Start 2P", monospace';
+        ctx.fillStyle = '#ffff00';
+        ctx.strokeText('PRESSIONE ESPACO', CONFIG.width / 2, 550);
+        ctx.fillText('PRESSIONE ESPACO', CONFIG.width / 2, 550);
+        ctx.strokeText('OU TOQUE PARA INICIAR', CONFIG.width / 2, 580);
+        ctx.fillText('OU TOQUE PARA INICIAR', CONFIG.width / 2, 580);
 
         // Controles
-        ctx.font = '12px monospace';
-        ctx.fillStyle = '#888888';
-        ctx.fillText('WASD/SETAS: MOVER', CONFIG.width / 2, 520);
-        ctx.fillText('ESPAÇO: ATIRAR', CONFIG.width / 2, 540);
+        ctx.font = '8px "Press Start 2P", monospace';
+        ctx.strokeText('WASD/SETAS: MOVER', CONFIG.width / 2, 630);
+        ctx.fillText('WASD/SETAS: MOVER', CONFIG.width / 2, 630);
+        ctx.strokeText('ESPACO: ATIRAR', CONFIG.width / 2, 655);
+        ctx.fillText('ESPACO: ATIRAR', CONFIG.width / 2, 655);
 
-        // Animação
+        // Animação START
         const pulse = Math.sin(Date.now() * 0.005) * 0.3 + 0.7;
         ctx.globalAlpha = pulse;
-        ctx.fillStyle = '#ffff00';
-        ctx.fillText('▶ START ◀', CONFIG.width / 2, 480);
+        ctx.font = '10px "Press Start 2P", monospace';
+        ctx.strokeText('> START <', CONFIG.width / 2, 690);
+        ctx.fillText('> START <', CONFIG.width / 2, 690);
         ctx.globalAlpha = 1;
     }
 
@@ -176,7 +197,7 @@ class SceneManager {
             ctx.fillStyle = '#000033';
             ctx.fillRect(0, 0, CONFIG.width, CONFIG.height);
             ctx.fillStyle = '#ff0000';
-            ctx.font = '20px monospace';
+            ctx.font = '10px "Press Start 2P", monospace';
             ctx.textAlign = 'center';
             ctx.fillText('ERRO: LEVELS não carregado', CONFIG.width / 2, CONFIG.height / 2);
             return;
@@ -187,7 +208,7 @@ class SceneManager {
 
         // Título
         ctx.fillStyle = '#00ffff';
-        ctx.font = 'bold 32px monospace';
+        ctx.font = '10px "Press Start 2P", monospace';
         ctx.textAlign = 'center';
         ctx.fillText('SELECIONE A FASE', CONFIG.width / 2, 80);
 
@@ -212,23 +233,23 @@ class SceneManager {
 
             // Número da fase
             ctx.fillStyle = isCompleted ? '#666666' : '#ffffff';
-            ctx.font = 'bold 24px monospace';
+            ctx.font = '12px "Press Start 2P", monospace';
             ctx.textAlign = 'left';
             ctx.fillText(`FASE ${level.id}`, 80, y - 5);
 
             // Nome da fase
-            ctx.font = '16px monospace';
+            ctx.font = '10px "Press Start 2P", monospace';
             ctx.fillText(level.name, 80, y + 20);
 
             // Status
             if (isCompleted) {
                 ctx.fillStyle = '#00ff00';
-                ctx.font = 'bold 18px monospace';
+                ctx.font = '10px "Press Start 2P", monospace';
                 ctx.textAlign = 'right';
                 ctx.fillText('✓ COMPLETA', CONFIG.width - 80, y + 5);
             } else if (isSelected) {
                 ctx.fillStyle = '#ffff00';
-                ctx.font = 'bold 14px monospace';
+                ctx.font = '8px "Press Start 2P", monospace';
                 ctx.textAlign = 'right';
                 ctx.fillText('▶ ESPAÇO', CONFIG.width - 80, y + 5);
             }
@@ -237,12 +258,12 @@ class SceneManager {
         // Instruções
         ctx.textAlign = 'center';
         ctx.fillStyle = '#888888';
-        ctx.font = '12px monospace';
+        ctx.font = '12px "Press Start 2P", monospace';
         ctx.fillText('↑↓: NAVEGAR | ESPAÇO: SELECIONAR | ←: VOLTAR', CONFIG.width / 2, CONFIG.height - 50);
 
         // Nota sobre fases concluídas
         ctx.fillStyle = '#666666';
-        ctx.font = '11px monospace';
+        ctx.font = '11px "Press Start 2P", monospace';
         ctx.fillText('Fases concluídas não podem ser selecionadas', CONFIG.width / 2, CONFIG.height - 25);
     }
 
@@ -279,7 +300,7 @@ class SceneManager {
         ctx.fillRect(0, 0, CONFIG.width, CONFIG.height);
 
         ctx.fillStyle = '#00ffff';
-        ctx.font = 'bold 32px monospace';
+        ctx.font = '10px "Press Start 2P", monospace';
         ctx.textAlign = 'center';
         ctx.fillText('SELECIONE SUA NAVE', CONFIG.width / 2, 80);
 
@@ -320,7 +341,7 @@ class SceneManager {
         
         // Nome do piloto
         ctx.fillStyle = '#ffff00';
-        ctx.font = 'bold 12px monospace';
+        ctx.font = '12px "Press Start 2P", monospace';
         ctx.textAlign = 'center';
         ctx.fillText(ship.pilotName || 'PILOTO', pilotX, 310);
         
@@ -368,11 +389,11 @@ class SceneManager {
 
         // ========== INFO DA NAVE ==========
         ctx.fillStyle = '#ffffff';
-        ctx.font = '24px monospace';
+        ctx.font = '12px "Press Start 2P", monospace';
         ctx.textAlign = 'center';
         ctx.fillText(ship.name, centerX, 360);
 
-        ctx.font = '14px monospace';
+        ctx.font = '8px "Press Start 2P", monospace';
         const statsY = 400;
         const lineHeight = 25;
         
@@ -387,7 +408,7 @@ class SceneManager {
         // Instruções
         ctx.textAlign = 'center';
         ctx.fillStyle = '#888888';
-        ctx.font = '12px monospace';
+        ctx.font = '12px "Press Start 2P", monospace';
         ctx.fillText('◀ SETAS: ESCOLHER | ESPAÇO: CONFIRMAR | ↓: VOLTAR ▶', centerX, 600);
     }
 
@@ -403,15 +424,15 @@ class SceneManager {
         ctx.fillRect(0, 0, CONFIG.width, CONFIG.height);
 
         ctx.fillStyle = '#ff0000';
-        ctx.font = 'bold 48px monospace';
+        ctx.font = '10px "Press Start 2P", monospace';
         ctx.textAlign = 'center';
         ctx.fillText('GAME OVER', CONFIG.width / 2, CONFIG.height / 2 - 50);
 
         ctx.fillStyle = '#ffffff';
-        ctx.font = '20px monospace';
+        ctx.font = '10px "Press Start 2P", monospace';
         ctx.fillText(`PONTUAÇÃO: ${this.game.player.score}`, CONFIG.width / 2, CONFIG.height / 2 + 20);
 
-        ctx.font = '16px monospace';
+        ctx.font = '10px "Press Start 2P", monospace';
         ctx.fillText('PRESSIONE ESPAÇO', CONFIG.width / 2, CONFIG.height / 2 + 80);
     }
 
@@ -431,15 +452,15 @@ class SceneManager {
         ctx.fillRect(0, 0, CONFIG.width, CONFIG.height);
 
         ctx.fillStyle = '#00ff00';
-        ctx.font = 'bold 48px monospace';
+        ctx.font = '10px "Press Start 2P", monospace';
         ctx.textAlign = 'center';
         ctx.fillText('FASE COMPLETA!', CONFIG.width / 2, CONFIG.height / 2 - 50);
 
         ctx.fillStyle = '#ffffff';
-        ctx.font = '20px monospace';
+        ctx.font = '10px "Press Start 2P", monospace';
         ctx.fillText(`PONTUAÇÃO: ${this.game.player.score}`, CONFIG.width / 2, CONFIG.height / 2 + 20);
 
-        ctx.font = '16px monospace';
+        ctx.font = '10px "Press Start 2P", monospace';
         ctx.fillText('PRESSIONE ESPAÇO', CONFIG.width / 2, CONFIG.height / 2 + 80);
     }
 }
